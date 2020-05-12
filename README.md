@@ -1,6 +1,19 @@
 # Solar-System
 OpenlGl Solar System
 
+UPDATE (13/05/2020 - 00h45) -----------------------------------------------
+
+- Movimento e animações da câmara:
+  - Zoom, feito com Scroll
+  - Movimento livre com rato e teclado
+  - Teclas para movimento (A, S, W, D)
+- Animação da pausa adicionada
+
+Em falta:
+
+- Iluminação proveniente do sol
+- Posicionamento certo dos planetas, das velocidades e da órbitra.
+
 UPDATE (12/05/2020 - 22h56) -----------------------------------------------
 
 - Projeto começado de modo mas desta vez com carregamento de objetos modelados no blender
