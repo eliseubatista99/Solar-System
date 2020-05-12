@@ -20,6 +20,7 @@ using namespace glm;
 #include <common/controls.hpp>
 #include <common/objloader.hpp>
 #include "include/camera.h"
+#include <include/shader_m.h>
 
 GLuint VertexArrayID;
 // Create and compile our GLSL program from the shaders
@@ -30,8 +31,20 @@ glm::mat4 Projection;
 glm::mat4 View;
 // Get a handle for our "myTextureSampler" uniform
 GLuint TextureID;
-Camera camera(glm::vec3(0.0f, 10.0f, 30.0f));
+Camera camera(glm::vec3(0.0f, 10.0f, 70.0f));
 const unsigned int screenWidth = 1200, screenHeight = 1200;
+float lastX = screenWidth / 2.0f;
+float lastY = screenHeight / 2.0f;
+bool firstMouse = true;
+bool paused = false;
+
+void framebuffer_size_callback(GLFWwindow* window, int screenWidth, int screenHeight);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void processInput(GLFWwindow* window);
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 //---SUN------------------------------------------
 std::vector<glm::vec3> sunVertices;
@@ -142,7 +155,7 @@ float planetLocations[9][3] = {
 
 float planetDistance[9] = { 3.0f, 6.0f, 9.0f, 2.0f, 12.0f, 15.0f, 18.0f, 21.0f, 24.0f };
 
-float planetTranslationSpeed[9] = { 0.005f, 0.005f,  0.000f,  0.005f,  0.005f,  0.005f,  0.005f,  0.005f,  0.005f};
+float planetTranslationSpeed[9] = { 0.005f, 0.005f,  0.000f,  0.005f,  0.005f,  0.005f,  0.005f,  0.005f,  0.005f };
 
 float planetRotationSpeed[9] = { 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f };
 
@@ -282,6 +295,10 @@ void loadAllVBOs() {
 }
 
 void calcNewLocations() {
+
+	if (paused)
+		return;
+
 	for (int i = 0; i < 9; i++) {
 		planetAngles[i] += planetTranslationSpeed[i];
 		planetRotationValue[i] += planetRotationSpeed[i];
@@ -297,13 +314,14 @@ void calcNewLocations() {
 			planetLocations[i][0] = planetDistance[i] * cos(planetAngles[i]);
 			planetLocations[i][2] = planetDistance[i] * sin(planetAngles[i]);
 		}
-		
+
 	}
 }
 
 void setUpMVPS() {
+
 	sunModelMatrix = glm::mat4(1.0);
-	sunMVP = Projection * View * sunModelMatrix;
+	sunMVP = Projection * View;
 
 	mercuryModelMatrix = glm::mat4(1.0);
 	mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
@@ -350,20 +368,16 @@ void setUpMVPS() {
 	neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
 	neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
 	neptuneMVP = Projection * View * neptuneModelMatrix;
-	
+
 }
 
 void drawSpheres() {
 	// Use our shader
 	glUseProgram(programID);
 
-	// Compute the MVP matrix from keyboard and mouse input
-	computeMatricesFromInputs();
-	//Projection = getProjectionMatrix();
-	//View = getViewMatrix();
 	Projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 2000.0f);
-	//View = camera.GetViewMatrix();
-	View = camera.LookAtOrigin();
+	View = camera.GetViewMatrix();
+	//View = camera.LookAtOrigin();
 	calcNewLocations();
 	setUpMVPS();
 	//SUN --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -566,7 +580,7 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-	
+
 	//MARS --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -795,7 +809,9 @@ int main(void)
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK) {
@@ -845,6 +861,16 @@ int main(void)
 
 	do {
 
+		// per-frame time logic
+		// --------------------
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		// input
+		// -----
+		processInput(window);
+
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -869,4 +895,63 @@ int main(void)
 	glfwTerminate();
 
 	return 0;
+}
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow* window)
+{
+	//pause animations
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)  // If space key is pressed, pause/resume animation
+	{
+		paused = !paused;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+}
+
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(yoffset);
 }
