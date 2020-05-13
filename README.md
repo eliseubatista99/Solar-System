@@ -1,5 +1,14 @@
 # Solar-System
 OpenlGl Solar System
+TODO: ----------------------------------------------------
+
+- Iluminação proveniente do sol
+- Posicionamento certo dos planetas, das velocidades e da órbitra.
+- Multiplicar todos os movimentos (translações, rotações, e incrementos/decrementos de vartiáveis) por deltaTime
+- Verificar o limite de afastamento de zoom máximo (o zoom de afastamento máximo é diferente se usarmos aproximação com o w, ou pelo menos pareceu-me)
+- modelação das órbitas
+
+----------------------------------------------------------
 
 UPDATE (13/05/2020 - 00h45) -----------------------------------------------
 
@@ -9,17 +18,9 @@ UPDATE (13/05/2020 - 00h45) -----------------------------------------------
   - Teclas para movimento (A, S, W, D)
 - Animação da pausa adicionada
 
-Em falta:
-
-- Iluminação proveniente do sol
-- Posicionamento certo dos planetas, das velocidades e da órbitra.
-
 UPDATE (12/05/2020 - 22h56) -----------------------------------------------
 
 - Projeto começado de modo mas desta vez com carregamento de objetos modelados no blender
-  Em falta:
-  - movimento da câmera
-  - modelação das órbitas
 
 UPDATE (12/05/2020 - 10h23) -----------------------------------------------
 
