@@ -72,17 +72,33 @@ public:
     }
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime)
+    void ProcessKeyboard(Camera_Movement direction, float deltaTime, float radius)
     {
         float velocity = MovementSpeed * deltaTime;
-        if (direction == FORWARD)
+        if (direction == FORWARD) {
             Position += Front * velocity;
-        if (direction == BACKWARD)
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+                Position -= Front * velocity;
+            }
+        }
+        if (direction == BACKWARD) {
             Position -= Front * velocity;
-        if (direction == LEFT)
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+                Position += Front * velocity;
+            }
+        }
+        if (direction == LEFT) {
             Position -= Right * velocity;
-        if (direction == RIGHT)
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+                Position += Right * velocity;
+            }
+        }
+        if (direction == RIGHT) {
             Position += Right * velocity;
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+                Position -= Right * velocity;
+            }
+        }
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

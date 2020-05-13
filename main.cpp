@@ -31,12 +31,14 @@ glm::mat4 Projection;
 glm::mat4 View;
 // Get a handle for our "myTextureSampler" uniform
 GLuint TextureID;
-Camera camera(glm::vec3(0.0f, 10.0f, 70.0f));
+Camera camera(glm::vec3(0.0f, 30.0f, 120.0f));
 const unsigned int screenWidth = 1200, screenHeight = 1200;
 float lastX = screenWidth / 2.0f;
 float lastY = screenHeight / 2.0f;
 bool firstMouse = true;
 bool paused = false;
+
+float camMoveSpeed = 5.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int screenWidth, int screenHeight);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -56,6 +58,7 @@ std::vector<glm::vec3> marsVertices;
 std::vector<glm::vec3> jupiterVertices;
 std::vector<glm::vec3> saturnVertices;
 std::vector<glm::vec3> uranusVertices;
+std::vector<glm::vec3> uranusRingsVertices;
 std::vector<glm::vec3> neptuneVertices;
 
 std::vector<glm::vec2> sunUvs;
@@ -67,6 +70,7 @@ std::vector<glm::vec2> marsUvs;
 std::vector<glm::vec2> jupiterUvs;
 std::vector<glm::vec2> saturnUvs;
 std::vector<glm::vec2> uranusUvs;
+std::vector<glm::vec2> uranusRingsUvs;
 std::vector<glm::vec2> neptuneUvs;
 
 std::vector<glm::vec3> sunNormals; // Won't be used at the moment.
@@ -78,6 +82,7 @@ std::vector<glm::vec3> marsNormals; // Won't be used at the moment.
 std::vector<glm::vec3> jupiterNormals; // Won't be used at the moment.
 std::vector<glm::vec3> saturnNormals; // Won't be used at the moment.
 std::vector<glm::vec3> uranusNormals; // Won't be used at the moment.
+std::vector<glm::vec3> uranusRingsNormals; // Won't be used at the moment.
 std::vector<glm::vec3> neptuneNormals; // Won't be used at the moment.
 
 
@@ -91,6 +96,7 @@ GLuint marsTexture;
 GLuint jupiterTexture;
 GLuint saturnTexture;
 GLuint uranusTexture;
+GLuint uranusRingsTexture;
 GLuint neptuneTexture;
 
 GLuint sunVertexbuffer;
@@ -102,6 +108,7 @@ GLuint marsVertexbuffer;
 GLuint jupiterVertexbuffer;
 GLuint saturnVertexbuffer;
 GLuint uranusVertexbuffer;
+GLuint uranusRingsVertexbuffer;
 GLuint neptuneVertexbuffer;
 
 GLuint sunUvbuffer;
@@ -113,6 +120,7 @@ GLuint marsUvbuffer;
 GLuint jupiterUvbuffer;
 GLuint saturnUvbuffer;
 GLuint uranusUvbuffer;
+GLuint uranusRingsUvbuffer;
 GLuint neptuneUvbuffer;
 
 
@@ -125,6 +133,7 @@ glm::mat4 marsModelMatrix;
 glm::mat4 jupiterModelMatrix;
 glm::mat4 saturnModelMatrix;
 glm::mat4 uranusModelMatrix;
+glm::mat4 uranusRingsModelMatrix;
 glm::mat4 neptuneModelMatrix;
 
 
@@ -137,31 +146,34 @@ glm::mat4 marsMVP;
 glm::mat4 jupiterMVP;
 glm::mat4 saturnMVP;
 glm::mat4 uranusMVP;
+glm::mat4 uranusRingsMVP;
 glm::mat4 neptuneMVP;
 
 //----------------------------------------
 float planetLocations[9][3] = {
-	{3.0f,0.0f,0.0f}, //MERCURY
-	{6.0f,0.0f,0.0f}, //VENUS
-	{9.0f,0.0f,0.0f}, //EARTH
-	{9.0f,0.0f,0.0f}, //MOON
-	{12.0f,0.0f,0.0f}, //MARS
-	{15.0f,0.0f,0.0f}, //JUPITER
-	{18.0f,0.0f,0.0f}, //SATURN
-	{21.0f,0.0f,0.0f}, //URANUS
-	{24.0f,0.0f,0.0f}, //NEPTUNE
+	{26.0f,0.0f,0.0f}, //MERCURY
+	{30.0f,0.0f,0.0f}, //VENUS
+	{34.0f,0.0f,0.0f}, //EARTH
+	{34.0f,0.0f,0.0f}, //MOON
+	{38.0f,0.0f,0.0f}, //MARS
+	{45.0f,0.0f,0.0f}, //JUPITER
+	{55.0f,0.0f,0.0f}, //SATURN
+	{65.0f,0.0f,0.0f}, //URANUS
+	{75.0f,0.0f,0.0f}, //NEPTUNE
 
 };
 
-float planetDistance[9] = { 3.0f, 6.0f, 9.0f, 2.0f, 12.0f, 15.0f, 18.0f, 21.0f, 24.0f };
+float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0f, 75.0f };
 
-float planetTranslationSpeed[9] = { 0.005f, 0.005f,  0.000f,  0.005f,  0.005f,  0.005f,  0.005f,  0.005f,  0.005f };
+float planetTranslationSpeed[9] = { 0.85f, -0.63f,  -0.53f, 1.89f , -0.43f,  -0.23f,  -0.17f,  -0.12f,  -0.9f};
 
-float planetRotationSpeed[9] = { 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f };
+float planetRotationSpeed[9] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
 float planetRotationValue[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 float planetAngles[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+
+float planetRadius[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 void loadTextures() {
 	// Load the texture
@@ -174,40 +186,64 @@ void loadTextures() {
 	jupiterTexture = loadDDS("resources/textures/jupiter_texture.dds");
 	saturnTexture = loadDDS("resources/textures/saturn_texture.dds");
 	uranusTexture = loadDDS("resources/textures/uranus_texture.dds");
+	uranusRingsTexture = loadDDS("resources/textures/uranus_rings_texture.dds");
 	neptuneTexture = loadDDS("resources/textures/neptune_texture.dds");
 }
 
 void loadObjects() {
+	int error = 0;
 	if (!loadOBJ("resources/models/no_rings_planet.obj", sunVertices, sunUvs, sunNormals)) {
-		printf("Sun not found\n");
+		error = 1;
 	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", mercuryVertices, mercuryUvs, mercuryNormals)) {
-		printf("Mercury not found\n");
-	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", venusVertices, venusUvs, venusNormals)) {
-		printf("Venus not found\n");
-	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", earthVertices, earthUvs, earthNormals)) {
-		printf("Venus not found\n");
-	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", moonVertices, moonUvs, moonNormals)) {
-		printf("Venus not found\n");
-	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", marsVertices, marsUvs, marsNormals)) {
-		printf("Venus not found\n");
-	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", jupiterVertices, jupiterUvs, jupiterNormals)) {
-		printf("Venus not found\n");
+	if (error == 1) {
+		exit(EXIT_FAILURE);
 	}
 	if (!loadOBJ("resources/models/saturn.obj", saturnVertices, saturnUvs, saturnNormals)) {
-		printf("Venus not found\n");
+		error = 1;
 	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", uranusVertices, uranusUvs, uranusNormals)) {
-		printf("Venus not found\n");
+	if (error == 1) {
+		exit(EXIT_FAILURE);
 	}
-	if (!loadOBJ("resources/models/no_rings_planet.obj", neptuneVertices, neptuneUvs, neptuneNormals)) {
-		printf("Venus not found\n");
+	if (!loadOBJ("resources/models/uranus_rings.obj", uranusRingsVertices, uranusRingsUvs, uranusRingsNormals)) {
+		error = 1;
 	}
+	if (error == 1) {
+		exit(EXIT_FAILURE);
+	}
+	
+
+	mercuryVertices = sunVertices;
+	mercuryUvs = sunUvs;
+	mercuryNormals = sunNormals;
+
+	venusVertices = sunVertices;
+	venusUvs = sunUvs;
+	venusNormals = sunNormals;
+
+	earthVertices = sunVertices;
+	earthUvs = sunUvs;
+	earthNormals = sunNormals;
+
+	moonVertices = sunVertices;
+	moonUvs = sunUvs;
+	moonNormals = sunNormals;
+
+	marsVertices = sunVertices;
+	marsUvs = sunUvs;
+	marsNormals = sunNormals;
+
+	jupiterVertices = sunVertices;
+	jupiterUvs = sunUvs;
+	jupiterNormals = sunNormals;
+
+	uranusVertices = sunVertices;
+	uranusUvs = sunUvs;
+	uranusNormals = sunNormals;
+
+	neptuneVertices = sunVertices;
+	neptuneUvs = sunUvs;
+	neptuneNormals = sunNormals;
+
 }
 
 void loadAllVBOs() {
@@ -284,6 +320,14 @@ void loadAllVBOs() {
 	glBindBuffer(GL_ARRAY_BUFFER, uranusUvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, uranusUvs.size() * sizeof(glm::vec2), &uranusUvs[0], GL_STATIC_DRAW);
 	// Load it into a VBO
+	glGenBuffers(1, &uranusRingsVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusRingsVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, uranusRingsVertices.size() * sizeof(glm::vec3), &uranusRingsVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &uranusRingsUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusRingsUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, uranusRingsUvs.size() * sizeof(glm::vec2), &uranusRingsUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
 	glGenBuffers(1, &neptuneVertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, neptuneVertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, neptuneVertices.size() * sizeof(glm::vec3), &neptuneVertices[0], GL_STATIC_DRAW);
@@ -300,8 +344,8 @@ void calcNewLocations() {
 		return;
 
 	for (int i = 0; i < 9; i++) {
-		planetAngles[i] += planetTranslationSpeed[i];
-		planetRotationValue[i] += planetRotationSpeed[i];
+		planetAngles[i] += (planetTranslationSpeed[i] * deltaTime);
+		planetRotationValue[i] += (planetRotationSpeed[i] * deltaTime);
 		if (planetRotationValue[i] >= 360.0f) {
 			planetRotationValue[i] = -360.0f;
 		}
@@ -321,7 +365,8 @@ void calcNewLocations() {
 void setUpMVPS() {
 
 	sunModelMatrix = glm::mat4(1.0);
-	sunMVP = Projection * View;
+	sunModelMatrix = glm::scale(sunModelMatrix, glm::vec3(20.0f)); //84
+	sunMVP = Projection * View * sunModelMatrix;
 
 	mercuryModelMatrix = glm::mat4(1.0);
 	mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
@@ -331,42 +376,55 @@ void setUpMVPS() {
 	venusModelMatrix = glm::mat4(1.0);
 	venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
 	venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
+	venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(1.2f));
 	venusMVP = Projection * View * venusModelMatrix;
 
 	earthModelMatrix = glm::mat4(1.0);
 	earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
 	earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(1, 1, 0));
+	earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(1.6f));
 	earthMVP = Projection * View * earthModelMatrix;
 
 	moonModelMatrix = glm::mat4(1.0);
 	moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
-	moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(0.3f));
+	moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(0.2f));
 	moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
 	moonMVP = Projection * View * moonModelMatrix;
 
 	marsModelMatrix = glm::mat4(1.0);
 	marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
 	marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(1, 1, 0));
+	marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(0.8f));
 	marsMVP = Projection * View * marsModelMatrix;
 
 	jupiterModelMatrix = glm::mat4(1.0);
 	jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
 	jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
+	jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(5.0f));
 	jupiterMVP = Projection * View * jupiterModelMatrix;
 
 	saturnModelMatrix = glm::mat4(1.0);
 	saturnModelMatrix = glm::translate(saturnModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
 	saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(1, 1, 0));
+	saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(4.25f));
 	saturnMVP = Projection * View * saturnModelMatrix;
 
 	uranusModelMatrix = glm::mat4(1.0);
 	uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
 	uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+	uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(3.0f));
 	uranusMVP = Projection * View * uranusModelMatrix;
+
+	uranusRingsModelMatrix = glm::mat4(1.0);
+	uranusRingsModelMatrix = glm::translate(uranusRingsModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
+	uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+	uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(3.0f));
+	uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
 
 	neptuneModelMatrix = glm::mat4(1.0);
 	neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
 	neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
+	neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(2.9f));
 	neptuneMVP = Projection * View * neptuneModelMatrix;
 
 }
@@ -741,6 +799,46 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	//URANUS RINGS --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &uranusRingsMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, uranusRingsTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusRingsVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusRingsUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, uranusVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	//NEPTUNE --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -910,13 +1008,13 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+		camera.ProcessKeyboard(FORWARD, deltaTime * camMoveSpeed, planetRadius[0]);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+		camera.ProcessKeyboard(BACKWARD, deltaTime * camMoveSpeed, planetRadius[0]);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
+		camera.ProcessKeyboard(LEFT, deltaTime * camMoveSpeed, planetRadius[0]);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+		camera.ProcessKeyboard(RIGHT, deltaTime * camMoveSpeed, planetRadius[0]);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
