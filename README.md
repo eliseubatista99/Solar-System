@@ -1,9 +1,9 @@
 # Solar-System
 OpenlGl Solar System
 
-Elideus says: IMPORTANTE!!! -----------------------------------------------
+**Elideus says: IMPORTANTE!!!** -----------------------------------------------
 
-  É necessário posicionar os planetas o mais rápido possível, por causa das órbitas. Eu poderia modelar uma órbita de raio 1, e dava-mos scale consoante a posição do planeta, porém, se dermos scale na órbita, esta deixará de ser uma linha e ficará esticada e achatada. Por isso, eu posso modelar 8 órbitas (9 se quiserem a da lua) com raios específicos.
+  É necessário **posicionar os planetas** o mais rápido possível, por causa das órbitas. Eu poderia modelar uma órbita de raio 1, e dava-mos scale consoante a posição do planeta, porém, se **dermos scale na órbita**, esta deixará de ser uma linha e **ficará esticada** e achatada. Por isso, eu posso modelar **8 órbitas** (9 se quiserem a da lua) com **raios específicos**.
   Acho que amanhã bastava reunirmos depois da minha reuniao com o frutuoso (pelas 17h20), até lá estudávamos gestão)
 
 ---------------------------------------------------------
