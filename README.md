@@ -12,7 +12,7 @@ TODO: ----------------------------------------------------
 
 - Iluminação proveniente do sol
 - Posicionamento certo dos planetas, das velocidades e da órbitra.
-- Multiplicar todos os movimentos (translações, rotações, e incrementos/decrementos de vartiáveis) por deltaTime
+- Multiplicar todos os movimentos (translações, rotações, e incrementos/decrementos de variáveis) por deltaTime
 - Verificar o limite de afastamento de zoom máximo (o zoom de afastamento máximo é diferente se usarmos aproximação com o w, ou pelo menos pareceu-me)
 - modelação das órbitas
 
