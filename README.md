@@ -1,22 +1,22 @@
 # Solar-System
 OpenlGl Solar System
 
-**Elideus says: IMPORTANTE!!!** -----------------------------------------------
-
-  É necessário **posicionar os planetas** o mais rápido possível, por causa das órbitas. Eu poderia modelar uma órbita de raio 1, e dava-mos scale consoante a posição do planeta, porém, se **dermos scale na órbita**, esta deixará de ser uma linha e **ficará esticada** e achatada. Por isso, eu posso modelar **8 órbitas** (9 se quiserem a da lua) com **raios específicos**.
-  Acho que amanhã bastava reunirmos depois da minha reuniao com o frutuoso (pelas 17h20), até lá estudávamos gestão)
-
----------------------------------------------------------
-
 TODO: ----------------------------------------------------
 
 - Iluminação proveniente do sol
-- Posicionamento certo dos planetas, das velocidades e da órbitra.
-- Multiplicar todos os movimentos (translações, rotações, e incrementos/decrementos de variáveis) por deltaTime
-- Verificar o limite de afastamento de zoom máximo (o zoom de afastamento máximo é diferente se usarmos aproximação com o w, ou pelo menos pareceu-me)
+- Posicionamento certo dos planetas, das velocidades e da órbitra (talvez seja necessário mudar, dependendo da resposta do prof).
 - modelação das órbitas
 
 ----------------------------------------------------------
+
+UPDATE (13/05/2020 -19h59) -----------------------------------------------
+
+- Escalas e velocidades:
+  - Velocidades de translação (não reais)
+  - Velocidades de rotação (não reais)
+  - Carregamento do modelo da esfera alterado para ser feito apenas 1 vez
+  - Adicionado um modelo dos aneis de urano
+  - pequena alteração na função do keyboard da camera.h (será possivelmente removida, caso nao se consiga fazer a colisão com o "sol")
 
 UPDATE (13/05/2020 - 00h45) -----------------------------------------------
 
