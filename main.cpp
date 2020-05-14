@@ -52,7 +52,7 @@ float sunScale = 20.0f;
 float offsetFromNeptune = 140.0f;
 float offsetFromLookToPlanet = 2.0f;
 bool toLook = false;
-bool canT = true, canRight = true, canLeft = true, canSpace = true;
+bool canT = true, canRight = true, canLeft = true, canSpace = true, canL = true;
 int planetIndex = -1;
 glm::vec3 lookDestination(0.0f, 0.0f, 0.0f);
 glm::vec3 topVision(0.0f, 0.0f, 0.0f);
@@ -1613,7 +1613,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		lookToSun();
+		if (canL) {
+			canL = false;
+			lookToSun();
+		}
+		else {
+			if (glfwGetKey(window, GLFW_KEY_L) == GLFW_RELEASE) {
+				canL = true;
+			}
+		}
 	}
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
 		if (canT) {
