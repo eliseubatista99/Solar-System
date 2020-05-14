@@ -6,6 +6,7 @@ TODO: ----------------------------------------------------
 - Iluminação proveniente do sol
 - Posicionamento certo dos planetas, das velocidades e da órbitra (talvez seja necessário mudar, dependendo da resposta do prof).
 - Diferentes vistas
+- As distâncias do modo de vista planeta precisam de um fix, depois trato disso
 
 
 ----------------------------------------------------------
