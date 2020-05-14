@@ -40,6 +40,7 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
+    float deltaTime = 0.0f;
 
     // Constructor with vectors
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
@@ -61,41 +62,49 @@ public:
     }
 
     // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix()
+    glm::mat4 GetViewMatrix(glm::vec3 destination, bool toLook)
     {
-        return glm::lookAt(Position, Position + Front, Up);
+        if (!toLook) {
+            return glm::lookAt(Position, Position + Front, Up);
+        }
+        return glm::lookAt(Position, destination, Up);
     }
 
-    glm::mat4 LookAtOrigin()
-    {
-        return glm::lookAt(Position, glm::vec3(0.0f, 0.0f, 0.0f), Up);
+    void setCameraView(glm::vec3 pos) {
+        Position.x = pos.x;
+        Position.y = pos.y;
+        Position.z = pos.z;
+    }
+
+    void setDeltaTime(float delta) {
+        deltaTime = delta;
     }
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime, float radius)
+    void ProcessKeyboard(Camera_Movement direction, float deltaTime, float radius, float maxDistance)
     {
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD) {
             Position += Front * velocity;
-            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius || glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) >= maxDistance) {
                 Position -= Front * velocity;
             }
         }
         if (direction == BACKWARD) {
             Position -= Front * velocity;
-            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius || glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) >= maxDistance) {
                 Position += Front * velocity;
             }
         }
         if (direction == LEFT) {
             Position -= Right * velocity;
-            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius || glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) >= maxDistance) {
                 Position += Right * velocity;
             }
         }
         if (direction == RIGHT) {
             Position += Right * velocity;
-            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius) {
+            if (glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) <= radius || glm::distance(Position, (glm::vec3(0.0f, 0.0f, 0.0f))) >= maxDistance) {
                 Position -= Right * velocity;
             }
         }
@@ -109,7 +118,7 @@ public:
 
         Yaw += xoffset;
         Pitch += yoffset;
-
+        printf("yaw: %f, pitch: %f\n", Yaw, Pitch);
         // Make sure that when pitch is out of bounds, screen doesn't get flipped
         if (constrainPitch)
         {

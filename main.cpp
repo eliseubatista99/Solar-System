@@ -32,11 +32,12 @@ glm::mat4 View;
 // Get a handle for our "myTextureSampler" uniform
 GLuint TextureID;
 Camera camera(glm::vec3(0.0f, 30.0f, 120.0f));
-const unsigned int screenWidth = 1200, screenHeight = 1200;
+unsigned int screenWidth = 1280, screenHeight = 768;
 float lastX = screenWidth / 2.0f;
 float lastY = screenHeight / 2.0f;
 bool firstMouse = true;
 bool paused = false;
+bool firstFrame = true;
 
 float camMoveSpeed = 5.0f;
 
@@ -47,6 +48,14 @@ void processInput(GLFWwindow* window);
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+float sunScale = 20.0f;
+float offsetFromNeptune = 140.0f;
+float offsetFromLookToPlanet = 2.0f;
+bool toLook = false;
+bool canT = true, canRight = true, canLeft = true, canSpace = true;
+int planetIndex = -1;
+glm::vec3 lookDestination(0.0f, 0.0f, 0.0f);
+glm::vec3 topVision(0.0f, 0.0f, 0.0f);
 
 //---SUN------------------------------------------
 std::vector<glm::vec3> sunVertices;
@@ -232,10 +241,22 @@ float planetLocations[9][3] = {
 	{55.0f,0.0f,0.0f}, //SATURN
 	{65.0f,0.0f,0.0f}, //URANUS
 	{75.0f,0.0f,0.0f}, //NEPTUNE
-
 };
 
-float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0f, 75.0f };
+//----------------------------------------
+float lookToPlanetLocations[9][3] = {
+	{26.0f,0.0f,0.0f}, //MERCURY
+	{30.0f,0.0f,0.0f}, //VENUS
+	{34.0f,0.0f,0.0f}, //EARTH
+	{34.0f,0.0f,0.0f}, //MOON
+	{38.0f,0.0f,0.0f}, //MARS
+	{45.0f,0.0f,0.0f}, //JUPITER
+	{55.0f,0.0f,0.0f}, //SATURN
+	{65.0f,0.0f,0.0f}, //URANUS
+	{75.0f,0.0f,0.0f}, //NEPTUNE
+};
+
+float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0f, 75.0f};
 
 float planetTranslationSpeed[9] = { 0.85f, -0.63f,  -0.53f, 1.89f , -0.43f,  -0.23f,  -0.17f,  -0.12f,  -0.9f};
 
@@ -245,11 +266,11 @@ float planetRotationValue[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 
 float planetAngles[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
-float planetRadius[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+float planetScales[9] = { 1.0f, 1.2f, 1.6f, 0.2f, 0.8f, 5.0f, 4.25f, 3.0f, 2.9f };
 
 void loadTextures() {
 	// Load the texture
-	sunTexture = loadDDS("resources/textures/sun_texture.dds");
+	sunTexture = loadDDS("resources/textures/sun_texture_8k.dds");
 	mercuryTexture = loadDDS("resources/textures/mercury_texture.dds");
 	venusTexture = loadDDS("resources/textures/venus_texture.dds");
 	earthTexture = loadDDS("resources/textures/earth_texture.dds");
@@ -527,6 +548,21 @@ void loadAllVBOs() {
 
 }
 
+void calculateNewLookLocations(int i) {
+	for (int i = 0; i < 9; i++) {
+		if (i == 3) {
+			lookToPlanetLocations[i][0] = planetLocations[2][0] + ((planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * sin(planetAngles[i]));
+			lookToPlanetLocations[i][1] = 3.0f;
+			lookToPlanetLocations[i][2] = planetLocations[2][2] + ((planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * cos(planetAngles[i]));
+		}
+		else {
+			lookToPlanetLocations[i][0] = (planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * cos(planetAngles[i]);
+			lookToPlanetLocations[i][1] = 3.0f;
+			lookToPlanetLocations[i][2] = (planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * sin(planetAngles[i]);
+		}
+	}
+}
+
 void calcNewLocations() {
 
 	if (paused)
@@ -540,26 +576,29 @@ void calcNewLocations() {
 		}
 		if (i == 3) {
 			planetLocations[i][0] = planetLocations[2][0] + (planetDistance[i] * sin(planetAngles[i]));
-			//planetLocations[i][1] = planetLocations[2][1] + (planetDistance[i] * cos(planetAngles[i]));
 			planetLocations[i][2] = planetLocations[2][2] + (planetDistance[i] * cos(planetAngles[i]));
+			
 		}
 		else {
 			planetLocations[i][0] = planetDistance[i] * cos(planetAngles[i]);
 			planetLocations[i][2] = planetDistance[i] * sin(planetAngles[i]);
 		}
-
+		calculateNewLookLocations(i);
 	}
 }
+
+
 
 void setUpMVPS() {
 
 	sunModelMatrix = glm::mat4(1.0);
-	sunModelMatrix = glm::scale(sunModelMatrix, glm::vec3(20.0f)); //84
+	sunModelMatrix = glm::scale(sunModelMatrix, glm::vec3(sunScale)); //84
 	sunMVP = Projection * View * sunModelMatrix;
 
 	mercuryModelMatrix = glm::mat4(1.0);
 	mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
 	mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
+	mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(planetScales[0]));
 	mercuryMVP = Projection * View * mercuryModelMatrix;
 
 	mercuryOrbitModelMatrix = glm::mat4(1.0);
@@ -569,7 +608,7 @@ void setUpMVPS() {
 	venusModelMatrix = glm::mat4(1.0);
 	venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
 	venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
-	venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(1.2f));
+	venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(planetScales[1]));
 	venusMVP = Projection * View * venusModelMatrix;
 
 	venusOrbitModelMatrix = glm::mat4(1.0);
@@ -579,7 +618,7 @@ void setUpMVPS() {
 	earthModelMatrix = glm::mat4(1.0);
 	earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
 	earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(1, 1, 0));
-	earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(1.6f));
+	earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(planetScales[2]));
 	earthMVP = Projection * View * earthModelMatrix;
 
 	earthOrbitModelMatrix = glm::mat4(1.0);
@@ -588,7 +627,7 @@ void setUpMVPS() {
 
 	moonModelMatrix = glm::mat4(1.0);
 	moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
-	moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(0.2f));
+	moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(planetScales[3]));
 	moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
 	moonMVP = Projection * View * moonModelMatrix;
 
@@ -601,7 +640,7 @@ void setUpMVPS() {
 	marsModelMatrix = glm::mat4(1.0);
 	marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
 	marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(1, 1, 0));
-	marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(0.8f));
+	marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(planetScales[4]));
 	marsMVP = Projection * View * marsModelMatrix;
 
 	marsOrbitModelMatrix = glm::mat4(1.0);
@@ -611,7 +650,7 @@ void setUpMVPS() {
 	jupiterModelMatrix = glm::mat4(1.0);
 	jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
 	jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
-	jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(5.0f));
+	jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(planetScales[5]));
 	jupiterMVP = Projection * View * jupiterModelMatrix;
 
 	jupiterOrbitModelMatrix = glm::mat4(1.0);
@@ -621,7 +660,7 @@ void setUpMVPS() {
 	saturnModelMatrix = glm::mat4(1.0);
 	saturnModelMatrix = glm::translate(saturnModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
 	saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(1, 1, 0));
-	saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(4.25f));
+	saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(planetScales[6]));
 	saturnMVP = Projection * View * saturnModelMatrix;
 
 	saturnOrbitModelMatrix = glm::mat4(1.0);
@@ -631,13 +670,13 @@ void setUpMVPS() {
 	uranusModelMatrix = glm::mat4(1.0);
 	uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
 	uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
-	uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(3.0f));
+	uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(planetScales[7]));
 	uranusMVP = Projection * View * uranusModelMatrix;
 
 	uranusRingsModelMatrix = glm::mat4(1.0);
 	uranusRingsModelMatrix = glm::translate(uranusRingsModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
 	uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
-	uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(3.0f));
+	uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(planetScales[7]));
 	uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
 
 	uranusOrbitModelMatrix = glm::mat4(1.0);
@@ -647,7 +686,7 @@ void setUpMVPS() {
 	neptuneModelMatrix = glm::mat4(1.0);
 	neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
 	neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
-	neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(2.9f));
+	neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(planetScales[8]));
 	neptuneMVP = Projection * View * neptuneModelMatrix;
 
 	neptuneOrbitModelMatrix = glm::mat4(1.0);
@@ -661,8 +700,8 @@ void drawSpheres() {
 	glUseProgram(programID);
 
 	Projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 2000.0f);
-	View = camera.GetViewMatrix();
-	//View = camera.LookAtOrigin();
+	View = camera.GetViewMatrix(lookDestination,toLook);
+	
 	calcNewLocations();
 	setUpMVPS();
 	//SUN --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1468,6 +1507,146 @@ void drawSpheres() {
 
 }
 
+void updateLook() {
+	glm::vec3 dest(0.0f, 0.0f, 0.0f);
+	dest.x = lookToPlanetLocations[planetIndex][0];
+	dest.y = lookToPlanetLocations[planetIndex][1];
+	dest.z = lookToPlanetLocations[planetIndex][2];
+	camera.setCameraView(dest);
+	lookDestination = glm::vec3(planetLocations[planetIndex][0], planetLocations[planetIndex][1], planetLocations[planetIndex][2]);
+
+}
+
+void lookToSun() {
+	lookDestination = glm::vec3(0.0f, 0.0f, 0.0f);
+	toLook = !toLook;
+}
+
+void lookToPlanet(bool direction) { //false - dec /true - inc	
+	if (!direction) {
+		planetIndex--;
+	}
+	else {
+		planetIndex++;
+	}
+	if (planetIndex > 8) {
+		planetIndex = 0;
+	}
+	else if (planetIndex < 0) {
+		planetIndex = 8;
+	}
+
+	toLook = true;
+}
+
+
+
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+
+
+
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+	screenWidth = width;
+	screenHeight = height;
+}
+
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(yoffset);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	
+	//pause animations
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)  // If space key is pressed, pause/resume animation
+	{
+		if (canSpace) {
+			canSpace = false;
+			paused = !paused;
+		}
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+			canSpace = true;
+		}
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		lookToSun();
+	}
+	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
+		if (canT) {
+			canT = false;
+			camera.setCameraView(topVision);
+			lookToSun();
+		}
+		else {
+			if (glfwGetKey(window, GLFW_KEY_T) == GLFW_RELEASE) {
+				canT = true;
+			}
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		if (canRight) {
+			canRight = false;
+			lookToPlanet(true);
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE) {
+			canRight = true;
+		}
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		if (canLeft) {
+			canLeft = false;
+			lookToPlanet(false);
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) {
+			canLeft = true;
+		}
+	}
+}
+
 int main(void)
 {
 	// Initialise GLFW
@@ -1485,7 +1664,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(1024, 768, "Solar System GN7", NULL, NULL);
+	window = glfwCreateWindow(screenWidth, screenHeight, "Solar System GN7", NULL, NULL);
 	if (window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		getchar();
@@ -1496,6 +1675,7 @@ int main(void)
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetKeyCallback(window, key_callback);
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK) {
@@ -1542,7 +1722,7 @@ int main(void)
 	loadObjects();
 
 	loadAllVBOs();
-
+	topVision = glm::vec3(0.0f, planetDistance[8] + offsetFromNeptune, 0.0f);
 	do {
 
 		// per-frame time logic
@@ -1550,15 +1730,19 @@ int main(void)
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		camera.setDeltaTime(deltaTime);
 
 		// input
 		// -----
-		processInput(window);
+		//processInput(window);
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		if (toLook) {
+			updateLook();
+		}
 		drawSpheres();
+
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -1580,62 +1764,4 @@ int main(void)
 
 	return 0;
 }
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
-{
-	//pause animations
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)  // If space key is pressed, pause/resume animation
-	{
-		paused = !paused;
-	}
 
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime * camMoveSpeed, planetRadius[0]);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime * camMoveSpeed, planetRadius[0]);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime * camMoveSpeed, planetRadius[0]);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime * camMoveSpeed, planetRadius[0]);
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	// make sure the viewport matches the new window dimensions; note that width and
-	// height will be significantly larger than specified on retina displays.
-	glViewport(0, 0, width, height);
-}
-
-
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-	lastX = xpos;
-	lastY = ypos;
-
-	camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	camera.ProcessMouseScroll(yoffset);
-}
