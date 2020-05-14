@@ -39,7 +39,7 @@ bool firstMouse = true;
 bool paused = false;
 bool firstFrame = true;
 
-float camMoveSpeed = 5.0f;
+float camMoveSpeed = 10.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int screenWidth, int screenHeight);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -256,9 +256,9 @@ float lookToPlanetLocations[9][3] = {
 	{75.0f,0.0f,0.0f}, //NEPTUNE
 };
 
-float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0f, 75.0f};
+float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0f, 75.0f };
 
-float planetTranslationSpeed[9] = { 0.85f, -0.63f,  -0.53f, 1.89f , -0.43f,  -0.23f,  -0.17f,  -0.12f,  -0.9f};
+float planetTranslationSpeed[9] = { 0.85f, -0.63f,  -0.53f, 1.89f , -0.43f,  -0.23f,  -0.17f,  -0.12f,  -0.9f };
 
 float planetRotationSpeed[9] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -267,6 +267,8 @@ float planetRotationValue[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 float planetAngles[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 float planetScales[9] = { 1.0f, 1.2f, 1.6f, 0.2f, 0.8f, 5.0f, 4.25f, 3.0f, 2.9f };
+
+float planetOffsets[9] = { 2.0f, 2.2f, 2.6f, 1.2f, 1.8f, 6.5f, 6.25f, 4.5f, 4.0f };
 
 void loadTextures() {
 	// Load the texture
@@ -315,7 +317,7 @@ void loadObjects() {
 	if (error == 1) {
 		exit(EXIT_FAILURE);
 	}
-	
+
 
 	mercuryVertices = sunVertices;
 	mercuryUvs = sunUvs;
@@ -551,14 +553,14 @@ void loadAllVBOs() {
 void calculateNewLookLocations(int i) {
 	for (int i = 0; i < 9; i++) {
 		if (i == 3) {
-			lookToPlanetLocations[i][0] = planetLocations[2][0] + ((planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * sin(planetAngles[i]));
-			lookToPlanetLocations[i][1] = 3.0f;
-			lookToPlanetLocations[i][2] = planetLocations[2][2] + ((planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * cos(planetAngles[i]));
+			lookToPlanetLocations[i][0] = planetLocations[2][0] + ((planetDistance[i] + (offsetFromLookToPlanet * planetOffsets[i])) * sin(planetAngles[i]));
+			lookToPlanetLocations[i][1] = 2.0f;
+			lookToPlanetLocations[i][2] = planetLocations[2][2] + ((planetDistance[i] + (offsetFromLookToPlanet * planetOffsets[i])) * cos(planetAngles[i]));
 		}
 		else {
-			lookToPlanetLocations[i][0] = (planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * cos(planetAngles[i]);
-			lookToPlanetLocations[i][1] = 3.0f;
-			lookToPlanetLocations[i][2] = (planetDistance[i] + (offsetFromLookToPlanet * planetScales[i])) * sin(planetAngles[i]);
+			lookToPlanetLocations[i][0] = (planetDistance[i] + (offsetFromLookToPlanet * planetOffsets[i])) * cos(planetAngles[i]);
+			lookToPlanetLocations[i][1] = 2.0f;
+			lookToPlanetLocations[i][2] = (planetDistance[i] + (offsetFromLookToPlanet * planetOffsets[i])) * sin(planetAngles[i]);
 		}
 	}
 }
@@ -577,7 +579,7 @@ void calcNewLocations() {
 		if (i == 3) {
 			planetLocations[i][0] = planetLocations[2][0] + (planetDistance[i] * sin(planetAngles[i]));
 			planetLocations[i][2] = planetLocations[2][2] + (planetDistance[i] * cos(planetAngles[i]));
-			
+
 		}
 		else {
 			planetLocations[i][0] = planetDistance[i] * cos(planetAngles[i]);
@@ -698,11 +700,9 @@ void setUpMVPS() {
 void drawSpheres() {
 	// Use our shader
 	glUseProgram(programID);
-
 	Projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 2000.0f);
-	View = camera.GetViewMatrix(lookDestination,toLook);
-	
-	calcNewLocations();
+	View = camera.GetViewMatrix(lookDestination, toLook);
+
 	setUpMVPS();
 	//SUN --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
@@ -1508,6 +1508,9 @@ void drawSpheres() {
 }
 
 void updateLook() {
+	if (planetIndex == -1) {
+		return;
+	}
 	glm::vec3 dest(0.0f, 0.0f, 0.0f);
 	dest.x = lookToPlanetLocations[planetIndex][0];
 	dest.y = lookToPlanetLocations[planetIndex][1];
@@ -1518,6 +1521,7 @@ void updateLook() {
 }
 
 void lookToSun() {
+	planetIndex = -1;
 	lookDestination = glm::vec3(0.0f, 0.0f, 0.0f);
 	toLook = !toLook;
 }
@@ -1588,7 +1592,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	
+
 	//pause animations
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)  // If space key is pressed, pause/resume animation
 	{
@@ -1670,7 +1674,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+	printf("%d, %d\n",screenWidth, screenHeight);
 	// Open a window and create its OpenGL context
 	window = glfwCreateWindow(screenWidth, screenHeight, "Solar System GN7", NULL, NULL);
 	if (window == NULL) {
@@ -1739,6 +1743,7 @@ int main(void)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		camera.setDeltaTime(deltaTime);
+		calcNewLocations();
 
 		// input
 		// -----
@@ -1772,4 +1777,3 @@ int main(void)
 
 	return 0;
 }
-
