@@ -7,5 +7,6 @@ C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1574,16): warning C
 C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1576,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1577,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1586,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1738,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  SolarSystem.vcxproj -> C:\Users\elise\source\repos\SolarSystem\Debug\SolarSystem.exe
+C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1743,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1674): error C4700: uninitialized local variable 'h' used
+C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1674): error C4700: uninitialized local variable 'w' used
