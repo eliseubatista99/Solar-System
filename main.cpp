@@ -51,103 +51,175 @@ float lastFrame = 0.0f;
 //---SUN------------------------------------------
 std::vector<glm::vec3> sunVertices;
 std::vector<glm::vec3> mercuryVertices;
+std::vector<glm::vec3> mercuryOrbitVertices;
 std::vector<glm::vec3> venusVertices;
+std::vector<glm::vec3> venusOrbitVertices;
 std::vector<glm::vec3> earthVertices;
+std::vector<glm::vec3> earthOrbitVertices;
 std::vector<glm::vec3> moonVertices;
+std::vector<glm::vec3> moonOrbitVertices;
 std::vector<glm::vec3> marsVertices;
+std::vector<glm::vec3> marsOrbitVertices;
 std::vector<glm::vec3> jupiterVertices;
+std::vector<glm::vec3> jupiterOrbitVertices;
 std::vector<glm::vec3> saturnVertices;
+std::vector<glm::vec3> saturnOrbitVertices;
 std::vector<glm::vec3> uranusVertices;
+std::vector<glm::vec3> uranusOrbitVertices;
 std::vector<glm::vec3> uranusRingsVertices;
 std::vector<glm::vec3> neptuneVertices;
+std::vector<glm::vec3> neptuneOrbitVertices;
 
 std::vector<glm::vec2> sunUvs;
 std::vector<glm::vec2> mercuryUvs;
+std::vector<glm::vec2> mercuryOrbitUvs;
 std::vector<glm::vec2> venusUvs;
+std::vector<glm::vec2> venusOrbitUvs;
 std::vector<glm::vec2> earthUvs;
+std::vector<glm::vec2> earthOrbitUvs;
 std::vector<glm::vec2> moonUvs;
+std::vector<glm::vec2> moonOrbitUvs;
 std::vector<glm::vec2> marsUvs;
+std::vector<glm::vec2> marsOrbitUvs;
 std::vector<glm::vec2> jupiterUvs;
+std::vector<glm::vec2> jupiterOrbitUvs;
 std::vector<glm::vec2> saturnUvs;
+std::vector<glm::vec2> saturnOrbitUvs;
 std::vector<glm::vec2> uranusUvs;
 std::vector<glm::vec2> uranusRingsUvs;
+std::vector<glm::vec2> uranusOrbitUvs;
 std::vector<glm::vec2> neptuneUvs;
+std::vector<glm::vec2> neptuneOrbitUvs;
 
 std::vector<glm::vec3> sunNormals; // Won't be used at the moment.
 std::vector<glm::vec3> mercuryNormals; // Won't be used at the moment.
+std::vector<glm::vec3> mercuryOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> venusNormals; // Won't be used at the moment.
+std::vector<glm::vec3> venusOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> earthNormals; // Won't be used at the moment.
+std::vector<glm::vec3> earthOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> moonNormals; // Won't be used at the moment.
+std::vector<glm::vec3> moonOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> marsNormals; // Won't be used at the moment.
+std::vector<glm::vec3> marsOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> jupiterNormals; // Won't be used at the moment.
+std::vector<glm::vec3> jupiterOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> saturnNormals; // Won't be used at the moment.
+std::vector<glm::vec3> saturnOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> uranusNormals; // Won't be used at the moment.
 std::vector<glm::vec3> uranusRingsNormals; // Won't be used at the moment.
+std::vector<glm::vec3> uranusOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> neptuneNormals; // Won't be used at the moment.
+std::vector<glm::vec3> neptuneOrbitNormals; // Won't be used at the moment.
 
 
 // Load the texture
 GLuint sunTexture;
 GLuint mercuryTexture;
+GLuint mercuryOrbitTexture;
 GLuint venusTexture;
+GLuint venusOrbitTexture;
 GLuint earthTexture;
+GLuint earthOrbitTexture;
 GLuint moonTexture;
+GLuint moonOrbitTexture;
 GLuint marsTexture;
+GLuint marsOrbitTexture;
 GLuint jupiterTexture;
+GLuint jupiterOrbitTexture;
 GLuint saturnTexture;
+GLuint saturnOrbitTexture;
 GLuint uranusTexture;
 GLuint uranusRingsTexture;
+GLuint uranusOrbitTexture;
 GLuint neptuneTexture;
+GLuint neptuneOrbitTexture;
 
 GLuint sunVertexbuffer;
 GLuint mercuryVertexbuffer;
+GLuint mercuryOrbitVertexbuffer;
 GLuint venusVertexbuffer;
+GLuint venusOrbitVertexbuffer;
 GLuint earthVertexbuffer;
+GLuint earthOrbitVertexbuffer;
 GLuint moonVertexbuffer;
+GLuint moonOrbitVertexbuffer;
 GLuint marsVertexbuffer;
+GLuint marsOrbitVertexbuffer;
 GLuint jupiterVertexbuffer;
+GLuint jupiterOrbitVertexbuffer;
 GLuint saturnVertexbuffer;
+GLuint saturnOrbitVertexbuffer;
 GLuint uranusVertexbuffer;
 GLuint uranusRingsVertexbuffer;
+GLuint uranusOrbitVertexbuffer;
 GLuint neptuneVertexbuffer;
+GLuint neptuneOrbitVertexbuffer;
 
 GLuint sunUvbuffer;
 GLuint mercuryUvbuffer;
+GLuint mercuryOrbitUvbuffer;
 GLuint venusUvbuffer;
+GLuint venusOrbitUvbuffer;
 GLuint earthUvbuffer;
+GLuint earthOrbitUvbuffer;
 GLuint moonUvbuffer;
+GLuint moonOrbitUvbuffer;
 GLuint marsUvbuffer;
+GLuint marsOrbitUvbuffer;
 GLuint jupiterUvbuffer;
+GLuint jupiterOrbitUvbuffer;
 GLuint saturnUvbuffer;
+GLuint saturnOrbitUvbuffer;
 GLuint uranusUvbuffer;
 GLuint uranusRingsUvbuffer;
+GLuint uranusOrbitUvbuffer;
 GLuint neptuneUvbuffer;
+GLuint neptuneOrbitUvbuffer;
 
 
 glm::mat4 sunModelMatrix;
 glm::mat4 mercuryModelMatrix;
+glm::mat4 mercuryOrbitModelMatrix;
 glm::mat4 venusModelMatrix;
+glm::mat4 venusOrbitModelMatrix;
 glm::mat4 earthModelMatrix;
+glm::mat4 earthOrbitModelMatrix;
 glm::mat4 moonModelMatrix;
+glm::mat4 moonOrbitModelMatrix;
 glm::mat4 marsModelMatrix;
+glm::mat4 marsOrbitModelMatrix;
 glm::mat4 jupiterModelMatrix;
+glm::mat4 jupiterOrbitModelMatrix;
 glm::mat4 saturnModelMatrix;
+glm::mat4 saturnOrbitModelMatrix;
 glm::mat4 uranusModelMatrix;
 glm::mat4 uranusRingsModelMatrix;
+glm::mat4 uranusOrbitModelMatrix;
 glm::mat4 neptuneModelMatrix;
+glm::mat4 neptuneOrbitModelMatrix;
 
 
 glm::mat4 sunMVP;
 glm::mat4 mercuryMVP;
+glm::mat4 mercuryOrbitMVP;
 glm::mat4 venusMVP;
+glm::mat4 venusOrbitMVP;
 glm::mat4 earthMVP;
+glm::mat4 earthOrbitMVP;
 glm::mat4 moonMVP;
+glm::mat4 moonOrbitMVP;
 glm::mat4 marsMVP;
+glm::mat4 marsOrbitMVP;
 glm::mat4 jupiterMVP;
+glm::mat4 jupiterOrbitMVP;
 glm::mat4 saturnMVP;
+glm::mat4 saturnOrbitMVP;
 glm::mat4 uranusMVP;
 glm::mat4 uranusRingsMVP;
+glm::mat4 uranusOrbitMVP;
 glm::mat4 neptuneMVP;
+glm::mat4 neptuneOrbitMVP;
 
 //----------------------------------------
 float planetLocations[9][3] = {
@@ -188,6 +260,15 @@ void loadTextures() {
 	uranusTexture = loadDDS("resources/textures/uranus_texture.dds");
 	uranusRingsTexture = loadDDS("resources/textures/uranus_rings_texture.dds");
 	neptuneTexture = loadDDS("resources/textures/neptune_texture.dds");
+	mercuryOrbitTexture = uranusRingsTexture;
+	venusOrbitTexture = uranusRingsTexture;
+	earthOrbitTexture = uranusRingsTexture;
+	moonOrbitTexture = uranusRingsTexture;
+	marsOrbitTexture = uranusRingsTexture;
+	jupiterOrbitTexture = uranusRingsTexture;
+	saturnOrbitTexture = uranusRingsTexture;
+	uranusOrbitTexture = uranusRingsTexture;
+	neptuneOrbitTexture = uranusRingsTexture;
 }
 
 void loadObjects() {
@@ -207,6 +288,9 @@ void loadObjects() {
 	if (!loadOBJ("resources/models/uranus_rings.obj", uranusRingsVertices, uranusRingsUvs, uranusRingsNormals)) {
 		error = 1;
 	}
+	if (!loadOBJ("resources/models/orbit.obj", mercuryOrbitVertices, mercuryOrbitUvs, mercuryOrbitNormals)) {
+		error = 1;
+	}
 	if (error == 1) {
 		exit(EXIT_FAILURE);
 	}
@@ -220,29 +304,61 @@ void loadObjects() {
 	venusUvs = sunUvs;
 	venusNormals = sunNormals;
 
+	venusOrbitVertices = mercuryOrbitVertices;
+	venusOrbitUvs = mercuryOrbitUvs;
+	venusOrbitNormals = mercuryOrbitNormals;
+
 	earthVertices = sunVertices;
 	earthUvs = sunUvs;
 	earthNormals = sunNormals;
+
+	earthOrbitVertices = mercuryOrbitVertices;
+	earthOrbitUvs = mercuryOrbitUvs;
+	earthOrbitNormals = mercuryOrbitNormals;
 
 	moonVertices = sunVertices;
 	moonUvs = sunUvs;
 	moonNormals = sunNormals;
 
+	moonOrbitVertices = mercuryOrbitVertices;
+	moonOrbitUvs = mercuryOrbitUvs;
+	moonOrbitNormals = mercuryOrbitNormals;
+
 	marsVertices = sunVertices;
 	marsUvs = sunUvs;
 	marsNormals = sunNormals;
+
+	marsOrbitVertices = mercuryOrbitVertices;
+	marsOrbitUvs = mercuryOrbitUvs;
+	marsOrbitNormals = mercuryOrbitNormals;
 
 	jupiterVertices = sunVertices;
 	jupiterUvs = sunUvs;
 	jupiterNormals = sunNormals;
 
+	jupiterOrbitVertices = mercuryOrbitVertices;
+	jupiterOrbitUvs = mercuryOrbitUvs;
+	jupiterOrbitNormals = mercuryOrbitNormals;
+
+	saturnOrbitVertices = mercuryOrbitVertices;
+	saturnOrbitUvs = mercuryOrbitUvs;
+	saturnOrbitNormals = mercuryOrbitNormals;
+
 	uranusVertices = sunVertices;
 	uranusUvs = sunUvs;
 	uranusNormals = sunNormals;
 
+	uranusOrbitVertices = mercuryOrbitVertices;
+	uranusOrbitUvs = mercuryOrbitUvs;
+	uranusOrbitNormals = mercuryOrbitNormals;
+
 	neptuneVertices = sunVertices;
 	neptuneUvs = sunUvs;
 	neptuneNormals = sunNormals;
+
+	neptuneOrbitVertices = mercuryOrbitVertices;
+	neptuneOrbitUvs = mercuryOrbitUvs;
+	neptuneOrbitNormals = mercuryOrbitNormals;
 
 }
 
@@ -287,6 +403,7 @@ void loadAllVBOs() {
 	glGenBuffers(1, &moonUvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, moonUvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, moonUvs.size() * sizeof(glm::vec2), &moonUvs[0], GL_STATIC_DRAW);
+
 	// Load it into a VBO
 	glGenBuffers(1, &marsVertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, marsVertexbuffer);
@@ -335,6 +452,78 @@ void loadAllVBOs() {
 	glGenBuffers(1, &neptuneUvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, neptuneUvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, neptuneUvs.size() * sizeof(glm::vec2), &neptuneUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &mercuryOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, mercuryOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, mercuryOrbitVertices.size() * sizeof(glm::vec3), &mercuryOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &mercuryOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, mercuryOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, mercuryOrbitUvs.size() * sizeof(glm::vec2), &mercuryOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &venusOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, venusOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, venusOrbitVertices.size() * sizeof(glm::vec3), &venusOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &venusOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, venusOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, venusOrbitUvs.size() * sizeof(glm::vec2), &venusOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &earthOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, earthOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, earthOrbitVertices.size() * sizeof(glm::vec3), &earthOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &earthOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, earthOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, earthOrbitUvs.size() * sizeof(glm::vec2), &earthOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &moonOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, moonOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, moonOrbitVertices.size() * sizeof(glm::vec3), &moonOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &moonOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, moonOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, moonOrbitUvs.size() * sizeof(glm::vec2), &moonOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &marsOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, marsOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, marsOrbitVertices.size() * sizeof(glm::vec3), &marsOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &marsOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, marsOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, marsOrbitUvs.size() * sizeof(glm::vec2), &marsOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &jupiterOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, jupiterOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, jupiterOrbitVertices.size() * sizeof(glm::vec3), &jupiterOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &jupiterOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, jupiterOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, jupiterOrbitUvs.size() * sizeof(glm::vec2), &jupiterOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &saturnOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, saturnOrbitVertices.size() * sizeof(glm::vec3), &saturnOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &saturnOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, saturnOrbitUvs.size() * sizeof(glm::vec2), &saturnOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &uranusOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, uranusOrbitVertices.size() * sizeof(glm::vec3), &uranusOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &uranusOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, uranusOrbitUvs.size() * sizeof(glm::vec2), &uranusOrbitUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &neptuneOrbitVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, neptuneOrbitVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, neptuneOrbitVertices.size() * sizeof(glm::vec3), &neptuneOrbitVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &neptuneOrbitUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, neptuneOrbitUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, neptuneOrbitUvs.size() * sizeof(glm::vec2), &neptuneOrbitUvs[0], GL_STATIC_DRAW);
 
 }
 
@@ -351,7 +540,7 @@ void calcNewLocations() {
 		}
 		if (i == 3) {
 			planetLocations[i][0] = planetLocations[2][0] + (planetDistance[i] * sin(planetAngles[i]));
-			planetLocations[i][1] = planetLocations[2][1] + (planetDistance[i] * cos(planetAngles[i]));
+			//planetLocations[i][1] = planetLocations[2][1] + (planetDistance[i] * cos(planetAngles[i]));
 			planetLocations[i][2] = planetLocations[2][2] + (planetDistance[i] * cos(planetAngles[i]));
 		}
 		else {
@@ -373,11 +562,19 @@ void setUpMVPS() {
 	mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
 	mercuryMVP = Projection * View * mercuryModelMatrix;
 
+	mercuryOrbitModelMatrix = glm::mat4(1.0);
+	mercuryOrbitModelMatrix = glm::scale(mercuryOrbitModelMatrix, glm::vec3(planetDistance[0]));
+	mercuryOrbitMVP = Projection * View * mercuryOrbitModelMatrix;
+
 	venusModelMatrix = glm::mat4(1.0);
 	venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
 	venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
 	venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(1.2f));
 	venusMVP = Projection * View * venusModelMatrix;
+
+	venusOrbitModelMatrix = glm::mat4(1.0);
+	venusOrbitModelMatrix = glm::scale(venusOrbitModelMatrix, glm::vec3(planetDistance[1]));
+	venusOrbitMVP = Projection * View * venusOrbitModelMatrix;
 
 	earthModelMatrix = glm::mat4(1.0);
 	earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
@@ -385,11 +582,21 @@ void setUpMVPS() {
 	earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(1.6f));
 	earthMVP = Projection * View * earthModelMatrix;
 
+	earthOrbitModelMatrix = glm::mat4(1.0);
+	earthOrbitModelMatrix = glm::scale(earthOrbitModelMatrix, glm::vec3(planetDistance[2]));
+	earthOrbitMVP = Projection * View * earthOrbitModelMatrix;
+
 	moonModelMatrix = glm::mat4(1.0);
 	moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
 	moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(0.2f));
 	moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
 	moonMVP = Projection * View * moonModelMatrix;
+
+	moonOrbitModelMatrix = glm::mat4(1.0);
+	moonOrbitModelMatrix = glm::translate(moonOrbitModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
+	moonOrbitModelMatrix = glm::scale(moonOrbitModelMatrix, glm::vec3(planetDistance[3]));
+	//moonOrbitModelMatrix = glm::rotate(moonOrbitModelMatrix, glm::radians(-45.0f), glm::vec3(-1, 1, 1));
+	moonOrbitMVP = Projection * View * moonOrbitModelMatrix;
 
 	marsModelMatrix = glm::mat4(1.0);
 	marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
@@ -397,17 +604,29 @@ void setUpMVPS() {
 	marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(0.8f));
 	marsMVP = Projection * View * marsModelMatrix;
 
+	marsOrbitModelMatrix = glm::mat4(1.0);
+	marsOrbitModelMatrix = glm::scale(marsOrbitModelMatrix, glm::vec3(planetDistance[4]));
+	marsOrbitMVP = Projection * View * marsOrbitModelMatrix;
+
 	jupiterModelMatrix = glm::mat4(1.0);
 	jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
 	jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
 	jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(5.0f));
 	jupiterMVP = Projection * View * jupiterModelMatrix;
 
+	jupiterOrbitModelMatrix = glm::mat4(1.0);
+	jupiterOrbitModelMatrix = glm::scale(jupiterOrbitModelMatrix, glm::vec3(planetDistance[5]));
+	jupiterOrbitMVP = Projection * View * jupiterOrbitModelMatrix;
+
 	saturnModelMatrix = glm::mat4(1.0);
 	saturnModelMatrix = glm::translate(saturnModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
 	saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(1, 1, 0));
 	saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(4.25f));
 	saturnMVP = Projection * View * saturnModelMatrix;
+
+	saturnOrbitModelMatrix = glm::mat4(1.0);
+	saturnOrbitModelMatrix = glm::scale(saturnOrbitModelMatrix, glm::vec3(planetDistance[6]));
+	saturnOrbitMVP = Projection * View * saturnOrbitModelMatrix;
 
 	uranusModelMatrix = glm::mat4(1.0);
 	uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
@@ -421,11 +640,19 @@ void setUpMVPS() {
 	uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(3.0f));
 	uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
 
+	uranusOrbitModelMatrix = glm::mat4(1.0);
+	uranusOrbitModelMatrix = glm::scale(uranusOrbitModelMatrix, glm::vec3(planetDistance[7]));
+	uranusOrbitMVP = Projection * View * uranusOrbitModelMatrix;
+
 	neptuneModelMatrix = glm::mat4(1.0);
 	neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
 	neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
 	neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(2.9f));
 	neptuneMVP = Projection * View * neptuneModelMatrix;
+
+	neptuneOrbitModelMatrix = glm::mat4(1.0);
+	neptuneOrbitModelMatrix = glm::scale(neptuneOrbitModelMatrix, glm::vec3(planetDistance[8]));
+	neptuneOrbitMVP = Projection * View * neptuneOrbitModelMatrix;
 
 }
 
@@ -518,6 +745,46 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	//MERCURY ORBIT--- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mercuryOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mercuryOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, mercuryOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, mercuryOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, mercuryOrbitVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	//VENUS --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -555,6 +822,46 @@ void drawSpheres() {
 
 	// Draw the triangle !
 	glDrawArrays(GL_TRIANGLES, 0, venusVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	//VENUS ORBIT --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &venusOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, venusOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, venusOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, venusOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, venusOrbitVertices.size());
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
@@ -598,6 +905,46 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	//EARTH ORBIT --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &earthOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, earthOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, earthOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, earthOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, earthOrbitVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	//MOON --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -638,7 +985,46 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	//MOON ORBIT --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &moonOrbitMVP[0][0]);
 
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, moonOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, moonOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, moonOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, moonOrbitVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	//MARS --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -676,6 +1062,46 @@ void drawSpheres() {
 
 	// Draw the triangle !
 	glDrawArrays(GL_TRIANGLES, 0, marsVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	//MARS ORBIT--- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &marsOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, marsOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, marsOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, marsOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, marsOrbitVertices.size());
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
@@ -719,6 +1145,46 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	//JUPITER ORBIT--- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &jupiterOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, jupiterOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, jupiterOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, jupiterOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, jupiterOrbitVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	//SATURN --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -756,6 +1222,46 @@ void drawSpheres() {
 
 	// Draw the triangle !
 	glDrawArrays(GL_TRIANGLES, 0, saturnVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	//SATURN ORBIT--- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &saturnOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, saturnOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, saturnOrbitVertices.size());
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
@@ -839,6 +1345,46 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	//URANUS ORBIT --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &uranusOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, uranusOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, uranusOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, uranusOrbitVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 	//NEPTUNE --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -876,6 +1422,46 @@ void drawSpheres() {
 
 	// Draw the triangle !
 	glDrawArrays(GL_TRIANGLES, 0, neptuneVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	//NEPTUNE ORBIT --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &neptuneOrbitMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, neptuneOrbitTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, neptuneOrbitVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, neptuneOrbitUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, neptuneOrbitVertices.size());
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
