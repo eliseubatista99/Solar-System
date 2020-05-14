@@ -1,15 +1,21 @@
 # Solar-System
 OpenlGl Solar System
 
+
 TODO: ----------------------------------------------------
 
 - Iluminação proveniente do sol
 - Posicionamento certo dos planetas, das velocidades e da órbitra (talvez seja necessário mudar, dependendo da resposta do prof).
-- Diferentes vistas
 - As distâncias do modo de vista planeta precisam de um fix, depois trato disso
 
 
 ----------------------------------------------------------
+
+UPDATE (15/05/2020 - 00:34) ----------------------------------------------
+
+- A tecla R elimina os planetas rochosos
+- A tecla G elimina os planetas gasosos
+- A tecla I posiciona a câmara na posição inicial a olhar para o sol
 
 UPDATE (14/05/2020 -22h26) -----------------------------------------------
 
