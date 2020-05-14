@@ -51,11 +51,14 @@ float lastFrame = 0.0f;
 float sunScale = 20.0f;
 float offsetFromNeptune = 140.0f;
 float offsetFromLookToPlanet = 2.0f;
+bool rochosos = true;
+bool gasosos = true;
 bool toLook = false;
-bool canT = true, canRight = true, canLeft = true, canSpace = true, canL = true;
+bool canT = true, canRight = true, canLeft = true, canSpace = true, canL = true, canI = true;
 int planetIndex = -1;
 glm::vec3 lookDestination(0.0f, 0.0f, 0.0f);
 glm::vec3 topVision(0.0f, 0.0f, 0.0f);
+glm::vec3 initVision(0.0f, 30.0f, 120.0f);
 
 //---SUN------------------------------------------
 std::vector<glm::vec3> sunVertices;
@@ -597,104 +600,211 @@ void setUpMVPS() {
 	sunModelMatrix = glm::scale(sunModelMatrix, glm::vec3(sunScale)); //84
 	sunMVP = Projection * View * sunModelMatrix;
 
-	mercuryModelMatrix = glm::mat4(1.0);
-	mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
-	mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
-	mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(planetScales[0]));
-	mercuryMVP = Projection * View * mercuryModelMatrix;
+	if (rochosos) {
+		mercuryModelMatrix = glm::mat4(1.0);
+		mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
+		mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
+		mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(planetScales[0]));
+		mercuryMVP = Projection * View * mercuryModelMatrix;
 
-	mercuryOrbitModelMatrix = glm::mat4(1.0);
-	mercuryOrbitModelMatrix = glm::scale(mercuryOrbitModelMatrix, glm::vec3(planetDistance[0]));
-	mercuryOrbitMVP = Projection * View * mercuryOrbitModelMatrix;
+		mercuryOrbitModelMatrix = glm::mat4(1.0);
+		mercuryOrbitModelMatrix = glm::scale(mercuryOrbitModelMatrix, glm::vec3(planetDistance[0]));
+		mercuryOrbitMVP = Projection * View * mercuryOrbitModelMatrix;
 
-	venusModelMatrix = glm::mat4(1.0);
-	venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
-	venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
-	venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(planetScales[1]));
-	venusMVP = Projection * View * venusModelMatrix;
+		venusModelMatrix = glm::mat4(1.0);
+		venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
+		venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
+		venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(planetScales[1]));
+		venusMVP = Projection * View * venusModelMatrix;
 
-	venusOrbitModelMatrix = glm::mat4(1.0);
-	venusOrbitModelMatrix = glm::scale(venusOrbitModelMatrix, glm::vec3(planetDistance[1]));
-	venusOrbitMVP = Projection * View * venusOrbitModelMatrix;
+		venusOrbitModelMatrix = glm::mat4(1.0);
+		venusOrbitModelMatrix = glm::scale(venusOrbitModelMatrix, glm::vec3(planetDistance[1]));
+		venusOrbitMVP = Projection * View * venusOrbitModelMatrix;
 
-	earthModelMatrix = glm::mat4(1.0);
-	earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
-	earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(1, 1, 0));
-	earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(planetScales[2]));
-	earthMVP = Projection * View * earthModelMatrix;
+		earthModelMatrix = glm::mat4(1.0);
+		earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
+		earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(1, 1, 0));
+		earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(planetScales[2]));
+		earthMVP = Projection * View * earthModelMatrix;
 
-	earthOrbitModelMatrix = glm::mat4(1.0);
-	earthOrbitModelMatrix = glm::scale(earthOrbitModelMatrix, glm::vec3(planetDistance[2]));
-	earthOrbitMVP = Projection * View * earthOrbitModelMatrix;
+		earthOrbitModelMatrix = glm::mat4(1.0);
+		earthOrbitModelMatrix = glm::scale(earthOrbitModelMatrix, glm::vec3(planetDistance[2]));
+		earthOrbitMVP = Projection * View * earthOrbitModelMatrix;
 
-	moonModelMatrix = glm::mat4(1.0);
-	moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
-	moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(planetScales[3]));
-	moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
-	moonMVP = Projection * View * moonModelMatrix;
+		moonModelMatrix = glm::mat4(1.0);
+		moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
+		moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(planetScales[3]));
+		moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
+		moonMVP = Projection * View * moonModelMatrix;
 
-	moonOrbitModelMatrix = glm::mat4(1.0);
-	moonOrbitModelMatrix = glm::translate(moonOrbitModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
-	moonOrbitModelMatrix = glm::scale(moonOrbitModelMatrix, glm::vec3(planetDistance[3]));
-	//moonOrbitModelMatrix = glm::rotate(moonOrbitModelMatrix, glm::radians(-45.0f), glm::vec3(-1, 1, 1));
-	moonOrbitMVP = Projection * View * moonOrbitModelMatrix;
+		moonOrbitModelMatrix = glm::mat4(1.0);
+		moonOrbitModelMatrix = glm::translate(moonOrbitModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
+		moonOrbitModelMatrix = glm::scale(moonOrbitModelMatrix, glm::vec3(planetDistance[3]));
+		//moonOrbitModelMatrix = glm::rotate(moonOrbitModelMatrix, glm::radians(-45.0f), glm::vec3(-1, 1, 1));
+		moonOrbitMVP = Projection * View * moonOrbitModelMatrix;
 
-	marsModelMatrix = glm::mat4(1.0);
-	marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
-	marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(1, 1, 0));
-	marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(planetScales[4]));
-	marsMVP = Projection * View * marsModelMatrix;
+		marsModelMatrix = glm::mat4(1.0);
+		marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
+		marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(1, 1, 0));
+		marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(planetScales[4]));
+		marsMVP = Projection * View * marsModelMatrix;
 
-	marsOrbitModelMatrix = glm::mat4(1.0);
-	marsOrbitModelMatrix = glm::scale(marsOrbitModelMatrix, glm::vec3(planetDistance[4]));
-	marsOrbitMVP = Projection * View * marsOrbitModelMatrix;
+		marsOrbitModelMatrix = glm::mat4(1.0);
+		marsOrbitModelMatrix = glm::scale(marsOrbitModelMatrix, glm::vec3(planetDistance[4]));
+		marsOrbitMVP = Projection * View * marsOrbitModelMatrix;
+	}
+	else {
 
-	jupiterModelMatrix = glm::mat4(1.0);
-	jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
-	jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
-	jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(planetScales[5]));
-	jupiterMVP = Projection * View * jupiterModelMatrix;
+		mercuryModelMatrix = glm::mat4(1.0);
+		mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
+		mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
+		mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(0.0f,0.0f,0.0f));
+		mercuryMVP = Projection * View * mercuryModelMatrix;
 
-	jupiterOrbitModelMatrix = glm::mat4(1.0);
-	jupiterOrbitModelMatrix = glm::scale(jupiterOrbitModelMatrix, glm::vec3(planetDistance[5]));
-	jupiterOrbitMVP = Projection * View * jupiterOrbitModelMatrix;
+		mercuryOrbitModelMatrix = glm::mat4(1.0);
+		mercuryOrbitModelMatrix = glm::scale(mercuryOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		mercuryOrbitMVP = Projection * View * mercuryOrbitModelMatrix;
 
-	saturnModelMatrix = glm::mat4(1.0);
-	saturnModelMatrix = glm::translate(saturnModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
-	saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(1, 1, 0));
-	saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(planetScales[6]));
-	saturnMVP = Projection * View * saturnModelMatrix;
+		venusModelMatrix = glm::mat4(1.0);
+		venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
+		venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
+		venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		venusMVP = Projection * View * venusModelMatrix;
 
-	saturnOrbitModelMatrix = glm::mat4(1.0);
-	saturnOrbitModelMatrix = glm::scale(saturnOrbitModelMatrix, glm::vec3(planetDistance[6]));
-	saturnOrbitMVP = Projection * View * saturnOrbitModelMatrix;
+		venusOrbitModelMatrix = glm::mat4(1.0);
+		venusOrbitModelMatrix = glm::scale(venusOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		venusOrbitMVP = Projection * View * venusOrbitModelMatrix;
 
-	uranusModelMatrix = glm::mat4(1.0);
-	uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
-	uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
-	uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(planetScales[7]));
-	uranusMVP = Projection * View * uranusModelMatrix;
+		earthModelMatrix = glm::mat4(1.0);
+		earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
+		earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(1, 1, 0));
+		earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		earthMVP = Projection * View * earthModelMatrix;
 
-	uranusRingsModelMatrix = glm::mat4(1.0);
-	uranusRingsModelMatrix = glm::translate(uranusRingsModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
-	uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
-	uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(planetScales[7]));
-	uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
+		earthOrbitModelMatrix = glm::mat4(1.0);
+		earthOrbitModelMatrix = glm::scale(earthOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		earthOrbitMVP = Projection * View * earthOrbitModelMatrix;
 
-	uranusOrbitModelMatrix = glm::mat4(1.0);
-	uranusOrbitModelMatrix = glm::scale(uranusOrbitModelMatrix, glm::vec3(planetDistance[7]));
-	uranusOrbitMVP = Projection * View * uranusOrbitModelMatrix;
+		moonModelMatrix = glm::mat4(1.0);
+		moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
+		moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
+		moonMVP = Projection * View * moonModelMatrix;
 
-	neptuneModelMatrix = glm::mat4(1.0);
-	neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
-	neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
-	neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(planetScales[8]));
-	neptuneMVP = Projection * View * neptuneModelMatrix;
+		moonOrbitModelMatrix = glm::mat4(1.0);
+		moonOrbitModelMatrix = glm::translate(moonOrbitModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
+		moonOrbitModelMatrix = glm::scale(moonOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		//moonOrbitModelMatrix = glm::rotate(moonOrbitModelMatrix, glm::radians(-45.0f), glm::vec3(-1, 1, 1));
+		moonOrbitMVP = Projection * View * moonOrbitModelMatrix;
 
-	neptuneOrbitModelMatrix = glm::mat4(1.0);
-	neptuneOrbitModelMatrix = glm::scale(neptuneOrbitModelMatrix, glm::vec3(planetDistance[8]));
-	neptuneOrbitMVP = Projection * View * neptuneOrbitModelMatrix;
+		marsModelMatrix = glm::mat4(1.0);
+		marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
+		marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(1, 1, 0));
+		marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		marsMVP = Projection * View * marsModelMatrix;
 
+		marsOrbitModelMatrix = glm::mat4(1.0);
+		marsOrbitModelMatrix = glm::scale(marsOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		marsOrbitMVP = Projection * View * marsOrbitModelMatrix;
+
+	}
+
+	if (gasosos) {
+		jupiterModelMatrix = glm::mat4(1.0);
+		jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
+		jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
+		jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(planetScales[5]));
+		jupiterMVP = Projection * View * jupiterModelMatrix;
+
+		jupiterOrbitModelMatrix = glm::mat4(1.0);
+		jupiterOrbitModelMatrix = glm::scale(jupiterOrbitModelMatrix, glm::vec3(planetDistance[5]));
+		jupiterOrbitMVP = Projection * View * jupiterOrbitModelMatrix;
+
+		saturnModelMatrix = glm::mat4(1.0);
+		saturnModelMatrix = glm::translate(saturnModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
+		saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(1, 1, 0));
+		saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(planetScales[6]));
+		saturnMVP = Projection * View * saturnModelMatrix;
+
+		saturnOrbitModelMatrix = glm::mat4(1.0);
+		saturnOrbitModelMatrix = glm::scale(saturnOrbitModelMatrix, glm::vec3(planetDistance[6]));
+		saturnOrbitMVP = Projection * View * saturnOrbitModelMatrix;
+
+		uranusModelMatrix = glm::mat4(1.0);
+		uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
+		uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(planetScales[7]));
+		uranusMVP = Projection * View * uranusModelMatrix;
+
+		uranusRingsModelMatrix = glm::mat4(1.0);
+		uranusRingsModelMatrix = glm::translate(uranusRingsModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
+		uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(planetScales[7]));
+		uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
+
+		uranusOrbitModelMatrix = glm::mat4(1.0);
+		uranusOrbitModelMatrix = glm::scale(uranusOrbitModelMatrix, glm::vec3(planetDistance[7]));
+		uranusOrbitMVP = Projection * View * uranusOrbitModelMatrix;
+
+		neptuneModelMatrix = glm::mat4(1.0);
+		neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
+		neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
+		neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(planetScales[8]));
+		neptuneMVP = Projection * View * neptuneModelMatrix;
+
+		neptuneOrbitModelMatrix = glm::mat4(1.0);
+		neptuneOrbitModelMatrix = glm::scale(neptuneOrbitModelMatrix, glm::vec3(planetDistance[8]));
+		neptuneOrbitMVP = Projection * View * neptuneOrbitModelMatrix;
+	}
+	else {
+
+		jupiterModelMatrix = glm::mat4(1.0);
+		jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
+		jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
+		jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		jupiterMVP = Projection * View * jupiterModelMatrix;
+
+		jupiterOrbitModelMatrix = glm::mat4(1.0);
+		jupiterOrbitModelMatrix = glm::scale(jupiterOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		jupiterOrbitMVP = Projection * View * jupiterOrbitModelMatrix;
+
+		saturnModelMatrix = glm::mat4(1.0);
+		saturnModelMatrix = glm::translate(saturnModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
+		saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(1, 1, 0));
+		saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		saturnMVP = Projection * View * saturnModelMatrix;
+
+		saturnOrbitModelMatrix = glm::mat4(1.0);
+		saturnOrbitModelMatrix = glm::scale(saturnOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		saturnOrbitMVP = Projection * View * saturnOrbitModelMatrix;
+
+		uranusModelMatrix = glm::mat4(1.0);
+		uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
+		uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		uranusMVP = Projection * View * uranusModelMatrix;
+
+		uranusRingsModelMatrix = glm::mat4(1.0);
+		uranusRingsModelMatrix = glm::translate(uranusRingsModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
+		uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
+
+		uranusOrbitModelMatrix = glm::mat4(1.0);
+		uranusOrbitModelMatrix = glm::scale(uranusOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		uranusOrbitMVP = Projection * View * uranusOrbitModelMatrix;
+
+		neptuneModelMatrix = glm::mat4(1.0);
+		neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
+		neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
+		neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		neptuneMVP = Projection * View * neptuneModelMatrix;
+
+		neptuneOrbitModelMatrix = glm::mat4(1.0);
+		neptuneOrbitModelMatrix = glm::scale(neptuneOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+		neptuneOrbitMVP = Projection * View * neptuneOrbitModelMatrix;
+
+	}
 }
 
 void drawSpheres() {
@@ -1608,6 +1718,30 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	//Elimina os rochosos
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		if (rochosos) {
+			rochosos = false;
+		}
+		else {
+			if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
+				rochosos = true;
+			}
+		}
+	}
+		
+	//Elimina os gasosos
+	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+		if (gasosos) {
+			gasosos = false;
+		}
+		else {
+			if (glfwGetKey(window, GLFW_KEY_G) == GLFW_RELEASE) {
+				gasosos = true;
+			}
+		}
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -1639,6 +1773,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			}
 		}
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+		if (canI) {
+			canI = false;
+			camera.setCameraView(initVision);
+			lookToSun();
+		}
+		else {
+			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_RELEASE) {
+				canI = true;
+			}
+		}
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		if (canRight) {
 			canRight = false;
@@ -1674,7 +1822,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	printf("%d, %d\n",screenWidth, screenHeight);
+	printf("%d, %d\n", screenWidth, screenHeight);
 	// Open a window and create its OpenGL context
 	window = glfwCreateWindow(screenWidth, screenHeight, "Solar System GN7", NULL, NULL);
 	if (window == NULL) {
