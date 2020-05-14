@@ -5,9 +5,21 @@ TODO: ----------------------------------------------------
 
 - Iluminação proveniente do sol
 - Posicionamento certo dos planetas, das velocidades e da órbitra (talvez seja necessário mudar, dependendo da resposta do prof).
-- modelação das órbitas
+- Diferentes vistas
+
 
 ----------------------------------------------------------
+
+UPDATE (14/05/2020 -22h26) -----------------------------------------------
+
+- modelação das órbitas
+- possibilidade de olhar para um planeta específico usando o teclado
+  - A seta para a direita move-se de planeta em direção a neptuno, a seta para a esquerda move-se de planeta em planeta em direção a neptuno)
+  - Pressionar l para voltar à vista livre
+- a tecla L alterna entre olhar fixamente para o sol e olhar livremente
+- inputs não contínuos (espaço, t, l, right arrow e left arrow)
+  - os inputs como o wasd são inputs contínuos, isto é, se a tecla se mantiver pressionada (hold), as ações causadas pelas mesmas são contínuas e acontecem a cada frame. Isso não se pretende nem tem bom aspeto em ações como "Pause" e "change planet view", pois mantendo a tecla "space" pressionada por 2 frames faria a sequência "pause->play".
+  - Dado isto, o implementado foi o seguinte: Quando uma das teclas mencionadas acima é pressionada, esta só pode voltar a ser pressionada depois de ser libertada (ao detetar um GLFW_RELEASE)
 
 UPDATE (13/05/2020 -19h59) -----------------------------------------------
 
