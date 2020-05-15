@@ -18,7 +18,7 @@ enum Camera_Movement {
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 5.0f;
+const float SPEED = 10.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
@@ -78,6 +78,10 @@ public:
 
     void setDeltaTime(float delta) {
         deltaTime = delta;
+    }
+
+    void setMovementSpeed(float speed) {
+        MovementSpeed = speed;
     }
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)

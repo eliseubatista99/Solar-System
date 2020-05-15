@@ -17,7 +17,6 @@ using namespace glm;
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
-#include <common/controls.hpp>
 #include <common/objloader.hpp>
 #include "include/camera.h"
 #include <include/shader_m.h>
@@ -39,12 +38,11 @@ bool firstMouse = true;
 bool paused = false;
 bool firstFrame = true;
 
-float camMoveSpeed = 10.0f;
+float camMoveSpeed = 100.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int screenWidth, int screenHeight);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -56,6 +54,7 @@ bool gasosos = true;
 bool toLook = false;
 bool canT = true, canRight = true, canLeft = true, canSpace = true, canL = true, canI = true;
 int planetIndex = -1;
+int currentVision = 0; //0 - sun, 1 - top, 2 - Initial, 3 - on planet, 4 - free
 glm::vec3 lookDestination(0.0f, 0.0f, 0.0f);
 glm::vec3 topVision(0.0f, 0.0f, 0.0f);
 glm::vec3 initVision(0.0f, 30.0f, 120.0f);
@@ -658,7 +657,7 @@ void setUpMVPS() {
 		mercuryModelMatrix = glm::mat4(1.0);
 		mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
 		mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
-		mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(0.0f,0.0f,0.0f));
+		mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		mercuryMVP = Projection * View * mercuryModelMatrix;
 
 		mercuryOrbitModelMatrix = glm::mat4(1.0);
@@ -1630,10 +1629,20 @@ void updateLook() {
 
 }
 
-void lookToSun() {
-	planetIndex = -1;
-	lookDestination = glm::vec3(0.0f, 0.0f, 0.0f);
-	toLook = !toLook;
+void lookToSun(int view) {
+	if (view == currentVision || view == 4) {
+		planetIndex = -1;
+		lookDestination = glm::vec3(0.0f, 0.0f, 0.0f);
+		toLook = false;
+		currentVision = 4;
+	}
+	else {
+		planetIndex = -1;
+		lookDestination = glm::vec3(0.0f, 0.0f, 0.0f);
+		toLook = true;
+		currentVision = view;
+	}
+	
 }
 
 void lookToPlanet(bool direction) { //false - dec /true - inc	
@@ -1649,17 +1658,9 @@ void lookToPlanet(bool direction) { //false - dec /true - inc
 	else if (planetIndex < 0) {
 		planetIndex = 8;
 	}
-
+	currentVision = 3;
 	toLook = true;
 }
-
-
-
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-
-
-
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
@@ -1677,6 +1678,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	if (toLook) return; 
+
 	if (firstMouse)
 	{
 		lastX = xpos;
@@ -1702,7 +1705,19 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
 
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+	if (!toLook) {
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			camera.ProcessKeyboard(LEFT, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			camera.ProcessKeyboard(RIGHT, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+	}
 	//pause animations
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)  // If space key is pressed, pause/resume animation
 	{
@@ -1715,8 +1730,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
 
 	//Elimina os rochosos
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
@@ -1729,7 +1742,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			}
 		}
 	}
-		
+
 	//Elimina os gasosos
 	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
 		if (gasosos) {
@@ -1742,18 +1755,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime, sunScale + 5.0f, planetDistance[8] + offsetFromNeptune);
+
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
 		if (canL) {
 			canL = false;
-			lookToSun();
+			lookToSun(0);
 		}
 		else {
 			if (glfwGetKey(window, GLFW_KEY_L) == GLFW_RELEASE) {
@@ -1765,7 +1771,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (canT) {
 			canT = false;
 			camera.setCameraView(topVision);
-			lookToSun();
+			lookToSun(1);
 		}
 		else {
 			if (glfwGetKey(window, GLFW_KEY_T) == GLFW_RELEASE) {
@@ -1778,7 +1784,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		if (canI) {
 			canI = false;
 			camera.setCameraView(initVision);
-			lookToSun();
+			lookToSun(2);
 		}
 		else {
 			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_RELEASE) {
@@ -1883,6 +1889,7 @@ int main(void)
 
 	loadAllVBOs();
 	topVision = glm::vec3(0.0f, planetDistance[8] + offsetFromNeptune, 0.0f);
+	camera.setMovementSpeed(camMoveSpeed);
 	do {
 
 		// per-frame time logic
