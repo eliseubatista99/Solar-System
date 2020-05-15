@@ -6,10 +6,12 @@ TODO: ----------------------------------------------------
 
 - Iluminação proveniente do sol
 - Posicionamento certo dos planetas, das velocidades e da órbitra (talvez seja necessário mudar, dependendo da resposta do prof).
-- As distâncias do modo de vista planeta precisam de um fix, depois trato disso
-
 
 ----------------------------------------------------------
+
+UPDATE (15/05/2020 - 02:37) ----------------------------------------------
+
+- A camera não se pode mover em lockMode (toLock == true)
 
 UPDATE (15/05/2020 - 00:34) ----------------------------------------------
 
