@@ -275,16 +275,27 @@ float planetOffsets[9] = { 2.0f, 2.2f, 2.6f, 1.2f, 1.8f, 6.5f, 6.25f, 4.5f, 4.0f
 void loadTextures() {
 	// Load the texture
 	sunTexture = loadDDS("resources/textures/sun_texture_8k.dds");
+	if (sunTexture == -1) exit(EXIT_FAILURE);
 	mercuryTexture = loadDDS("resources/textures/mercury_texture.dds");
+	if (mercuryTexture == -1) exit(EXIT_FAILURE);
 	venusTexture = loadDDS("resources/textures/venus_texture.dds");
+	if (venusTexture == -1) exit(EXIT_FAILURE);
 	earthTexture = loadDDS("resources/textures/earth_texture.dds");
+	if (earthTexture == -1) exit(EXIT_FAILURE);
 	moonTexture = loadDDS("resources/textures/moon_texture.dds");
+	if (moonTexture == -1) exit(EXIT_FAILURE);
 	marsTexture = loadDDS("resources/textures/mars_texture.dds");
+	if (marsTexture == -1) exit(EXIT_FAILURE);
 	jupiterTexture = loadDDS("resources/textures/jupiter_texture.dds");
+	if (jupiterTexture == -1) exit(EXIT_FAILURE);
 	saturnTexture = loadDDS("resources/textures/saturn_texture.dds");
+	if (saturnTexture == -1) exit(EXIT_FAILURE);
 	uranusTexture = loadDDS("resources/textures/uranus_texture.dds");
+	if (uranusTexture == -1) exit(EXIT_FAILURE);
 	uranusRingsTexture = loadDDS("resources/textures/uranus_rings_texture.dds");
+	if (uranusRingsTexture == -1) exit(EXIT_FAILURE);
 	neptuneTexture = loadDDS("resources/textures/neptune_texture.dds");
+	if (neptuneTexture == -1) exit(EXIT_FAILURE);
 	mercuryOrbitTexture = uranusRingsTexture;
 	venusOrbitTexture = uranusRingsTexture;
 	earthOrbitTexture = uranusRingsTexture;
@@ -1864,7 +1875,7 @@ int main(void)
 	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders("TransformVertexShader.vertexshader", "TextureFragmentShader.fragmentshader");
+	programID = LoadShaders("shaders/TransformVertexShader.vertexshader", "shaders/TextureFragmentShader.fragmentshader");
 
 	// Get a handle for our "MVP" uniform
 	MatrixID = glGetUniformLocation(programID, "MVP");

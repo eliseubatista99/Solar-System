@@ -135,7 +135,7 @@ GLuint loadDDS(const char * imagepath){
 	if (fp == NULL){
 		printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath); 
 		//getchar(); 
-		return 0;
+		return -1;
 	}
    
 	/* verify the type of file */ 

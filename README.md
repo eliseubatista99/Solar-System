@@ -8,9 +8,6 @@ TODO: ----------------------------------------------------
 - Posicionamento certo dos planetas, das velocidades e da órbitra (talvez seja necessário mudar, dependendo da resposta do prof).
 
 ----------------------------------------------------------
-UPDATE (16/05/2020 - 12:37) ----------------------------------------------
-
-- Alteração nos if-statements da função loadObjects()
 
 UPDATE (15/05/2020 - 02:37) ----------------------------------------------
 

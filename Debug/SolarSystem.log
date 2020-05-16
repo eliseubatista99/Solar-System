@@ -1,11 +1,2 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (ProjetoCg.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  main.cpp
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1674,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1675,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1679,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1680,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1682,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1683,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1692,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\elise\source\repos\SolarSystem\SolarSystem\main.cpp(1886,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   SolarSystem.vcxproj -> C:\Users\elise\source\repos\SolarSystem\Debug\SolarSystem.exe
