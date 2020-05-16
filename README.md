@@ -8,6 +8,13 @@ TODO: ----------------------------------------------------
 - Posicionamento certo dos planetas, das velocidades e da órbitra (talvez seja necessário mudar, dependendo da resposta do prof).
 
 ----------------------------------------------------------
+UPDATE (16/05/2020 - 15:19) ----------------------------------------------
+
+- Alteração dos if-statements da função loadObjects() e da função loadTextures()
+- ALteração do valor de retorno da função loadDDS (do script textures.cpp) em caso de erro (alterado para -1)
+- Reorganização dos ficheiros:
+  - Removidos ficheiro não utilizados
+  - Shaders movidos para a pasta shaders
 
 UPDATE (15/05/2020 - 02:37) ----------------------------------------------
 
