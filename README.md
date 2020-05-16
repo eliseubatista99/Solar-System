@@ -16,6 +16,8 @@ UPDATE (16/05/2020 - 15:19) ----------------------------------------------
   - Removidos ficheiro não utilizados
   - Shaders movidos para a pasta shaders
 
+Aconselho o substituirem completamente a vossa diretoria do projeto com o conteúdo deste repositório, para não terem que reorganizar manualmente (não apaguem os vossos ficheiro relativos à solução)
+
 UPDATE (15/05/2020 - 02:37) ----------------------------------------------
 
 - A camera não se pode mover em lockMode (toLock == true)
