@@ -19,7 +19,7 @@ using namespace glm;
 #include <common/texture.hpp>
 #include <common/objloader.hpp>
 #include "include/camera.h"
-#include <include/shader_m.h>
+//#include <include/shader_m.h>
 
 GLuint VertexArrayID;
 // Create and compile our GLSL program from the shaders
@@ -297,29 +297,18 @@ void loadTextures() {
 }
 
 void loadObjects() {
-	int error = 0;
 	if (!loadOBJ("resources/models/no_rings_planet.obj", sunVertices, sunUvs, sunNormals)) {
-		error = 1;
-	}
-	if (error == 1) {
 		exit(EXIT_FAILURE);
 	}
 	if (!loadOBJ("resources/models/saturn.obj", saturnVertices, saturnUvs, saturnNormals)) {
-		error = 1;
-	}
-	if (error == 1) {
 		exit(EXIT_FAILURE);
 	}
 	if (!loadOBJ("resources/models/uranus_rings.obj", uranusRingsVertices, uranusRingsUvs, uranusRingsNormals)) {
-		error = 1;
-	}
-	if (!loadOBJ("resources/models/orbit.obj", mercuryOrbitVertices, mercuryOrbitUvs, mercuryOrbitNormals)) {
-		error = 1;
-	}
-	if (error == 1) {
 		exit(EXIT_FAILURE);
 	}
-
+	if (!loadOBJ("resources/models/orbit.obj", mercuryOrbitVertices, mercuryOrbitUvs, mercuryOrbitNormals)) {
+		exit(EXIT_FAILURE);
+	}
 
 	mercuryVertices = sunVertices;
 	mercuryUvs = sunUvs;
