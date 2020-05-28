@@ -1,4 +1,4 @@
-// Include standard headers
+//Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
@@ -75,6 +75,7 @@ std::vector<glm::vec3> jupiterVertices;
 std::vector<glm::vec3> jupiterOrbitVertices;
 std::vector<glm::vec3> saturnVertices;
 std::vector<glm::vec3> saturnOrbitVertices;
+std::vector<glm::vec3> saturnRingsVertices;
 std::vector<glm::vec3> uranusVertices;
 std::vector<glm::vec3> uranusOrbitVertices;
 std::vector<glm::vec3> uranusRingsVertices;
@@ -96,6 +97,7 @@ std::vector<glm::vec2> jupiterUvs;
 std::vector<glm::vec2> jupiterOrbitUvs;
 std::vector<glm::vec2> saturnUvs;
 std::vector<glm::vec2> saturnOrbitUvs;
+std::vector<glm::vec2> saturnRingsUvs;
 std::vector<glm::vec2> uranusUvs;
 std::vector<glm::vec2> uranusRingsUvs;
 std::vector<glm::vec2> uranusOrbitUvs;
@@ -117,6 +119,7 @@ std::vector<glm::vec3> jupiterNormals; // Won't be used at the moment.
 std::vector<glm::vec3> jupiterOrbitNormals; // Won't be used at the moment.
 std::vector<glm::vec3> saturnNormals; // Won't be used at the moment.
 std::vector<glm::vec3> saturnOrbitNormals; // Won't be used at the moment.
+std::vector<glm::vec3> saturnRingsNormals; // Won't be used at the moment.
 std::vector<glm::vec3> uranusNormals; // Won't be used at the moment.
 std::vector<glm::vec3> uranusRingsNormals; // Won't be used at the moment.
 std::vector<glm::vec3> uranusOrbitNormals; // Won't be used at the moment.
@@ -140,6 +143,7 @@ GLuint jupiterTexture;
 GLuint jupiterOrbitTexture;
 GLuint saturnTexture;
 GLuint saturnOrbitTexture;
+GLuint saturnRingsTexture;
 GLuint uranusTexture;
 GLuint uranusRingsTexture;
 GLuint uranusOrbitTexture;
@@ -161,6 +165,7 @@ GLuint jupiterVertexbuffer;
 GLuint jupiterOrbitVertexbuffer;
 GLuint saturnVertexbuffer;
 GLuint saturnOrbitVertexbuffer;
+GLuint saturnRingsVertexbuffer;
 GLuint uranusVertexbuffer;
 GLuint uranusRingsVertexbuffer;
 GLuint uranusOrbitVertexbuffer;
@@ -182,6 +187,7 @@ GLuint jupiterUvbuffer;
 GLuint jupiterOrbitUvbuffer;
 GLuint saturnUvbuffer;
 GLuint saturnOrbitUvbuffer;
+GLuint saturnRingsUvbuffer;
 GLuint uranusUvbuffer;
 GLuint uranusRingsUvbuffer;
 GLuint uranusOrbitUvbuffer;
@@ -204,6 +210,7 @@ glm::mat4 jupiterModelMatrix;
 glm::mat4 jupiterOrbitModelMatrix;
 glm::mat4 saturnModelMatrix;
 glm::mat4 saturnOrbitModelMatrix;
+glm::mat4 saturnRingsModelMatrix;
 glm::mat4 uranusModelMatrix;
 glm::mat4 uranusRingsModelMatrix;
 glm::mat4 uranusOrbitModelMatrix;
@@ -225,6 +232,7 @@ glm::mat4 marsOrbitMVP;
 glm::mat4 jupiterMVP;
 glm::mat4 jupiterOrbitMVP;
 glm::mat4 saturnMVP;
+glm::mat4 saturnRingsMVP;
 glm::mat4 saturnOrbitMVP;
 glm::mat4 uranusMVP;
 glm::mat4 uranusRingsMVP;
@@ -262,7 +270,7 @@ float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0
 
 float planetTranslationSpeed[9] = { 0.85f, -0.63f,  -0.53f, 1.89f , -0.43f,  -0.23f,  -0.17f,  -0.12f,  -0.9f };
 
-float planetRotationSpeed[9] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+float planetRotationSpeed[9] = { 58.646f, -243.018f, 0.998f, 0.0081f, 1.026f, 0.41354f, 0.444f, -0.718f, 0.671f };
 
 float planetRotationValue[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -274,6 +282,7 @@ float planetOffsets[9] = { 2.0f, 2.2f, 2.6f, 1.2f, 1.8f, 6.5f, 6.25f, 4.5f, 4.0f
 
 void loadTextures() {
 	// Load the texture
+	//sunTexture = loadDDS("resources/textures/sun_texture_8k.dds");
 	sunTexture = loadDDS("resources/textures/sun_texture_8k.dds");
 	if (sunTexture == -1) exit(EXIT_FAILURE);
 	mercuryTexture = loadDDS("resources/textures/mercury_texture.dds");
@@ -288,7 +297,7 @@ void loadTextures() {
 	if (marsTexture == -1) exit(EXIT_FAILURE);
 	jupiterTexture = loadDDS("resources/textures/jupiter_texture.dds");
 	if (jupiterTexture == -1) exit(EXIT_FAILURE);
-	saturnTexture = loadDDS("resources/textures/saturn_texture.dds");
+	saturnTexture = loadDDS("resources/textures/saturn_texture_2.dds");
 	if (saturnTexture == -1) exit(EXIT_FAILURE);
 	uranusTexture = loadDDS("resources/textures/uranus_texture.dds");
 	if (uranusTexture == -1) exit(EXIT_FAILURE);
@@ -296,6 +305,8 @@ void loadTextures() {
 	if (uranusRingsTexture == -1) exit(EXIT_FAILURE);
 	neptuneTexture = loadDDS("resources/textures/neptune_texture.dds");
 	if (neptuneTexture == -1) exit(EXIT_FAILURE);
+
+	saturnRingsTexture = uranusRingsTexture;
 	mercuryOrbitTexture = uranusRingsTexture;
 	venusOrbitTexture = uranusRingsTexture;
 	earthOrbitTexture = uranusRingsTexture;
@@ -311,7 +322,7 @@ void loadObjects() {
 	if (!loadOBJ("resources/models/no_rings_planet.obj", sunVertices, sunUvs, sunNormals)) {
 		exit(EXIT_FAILURE);
 	}
-	if (!loadOBJ("resources/models/saturn.obj", saturnVertices, saturnUvs, saturnNormals)) {
+	if (!loadOBJ("resources/models/saturn_rings.obj", saturnRingsVertices, saturnRingsUvs, saturnRingsNormals)) {
 		exit(EXIT_FAILURE);
 	}
 	if (!loadOBJ("resources/models/uranus_rings.obj", uranusRingsVertices, uranusRingsUvs, uranusRingsNormals)) {
@@ -364,6 +375,10 @@ void loadObjects() {
 	jupiterOrbitVertices = mercuryOrbitVertices;
 	jupiterOrbitUvs = mercuryOrbitUvs;
 	jupiterOrbitNormals = mercuryOrbitNormals;
+
+	saturnVertices = sunVertices;
+	saturnUvs = sunUvs;
+	saturnNormals = sunNormals;
 
 	saturnOrbitVertices = mercuryOrbitVertices;
 	saturnOrbitUvs = mercuryOrbitUvs;
@@ -453,6 +468,14 @@ void loadAllVBOs() {
 	glGenBuffers(1, &saturnUvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, saturnUvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, saturnUvs.size() * sizeof(glm::vec2), &saturnUvs[0], GL_STATIC_DRAW);
+	// Load it into a VBO
+	glGenBuffers(1, &saturnRingsVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnRingsVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, saturnRingsVertices.size() * sizeof(glm::vec3), &saturnRingsVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &saturnRingsUvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnRingsUvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, saturnRingsUvs.size() * sizeof(glm::vec2), &saturnRingsUvs[0], GL_STATIC_DRAW);
 	// Load it into a VBO
 	glGenBuffers(1, &uranusVertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uranusVertexbuffer);
@@ -596,13 +619,13 @@ void calcNewLocations() {
 void setUpMVPS() {
 
 	sunModelMatrix = glm::mat4(1.0);
-	sunModelMatrix = glm::scale(sunModelMatrix, glm::vec3(sunScale)); //84
+	sunModelMatrix = glm::scale(sunModelMatrix, glm::vec3(sunScale));
 	sunMVP = Projection * View * sunModelMatrix;
 
 	if (rochosos) {
 		mercuryModelMatrix = glm::mat4(1.0);
 		mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
-		mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
+		mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(0, 1, 0));
 		mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(planetScales[0]));
 		mercuryMVP = Projection * View * mercuryModelMatrix;
 
@@ -612,7 +635,7 @@ void setUpMVPS() {
 
 		venusModelMatrix = glm::mat4(1.0);
 		venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
-		venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
+		venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(0, 1, 0));
 		venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(planetScales[1]));
 		venusMVP = Projection * View * venusModelMatrix;
 
@@ -622,7 +645,7 @@ void setUpMVPS() {
 
 		earthModelMatrix = glm::mat4(1.0);
 		earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
-		earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(1, 1, 0));
+		earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(0, 1, 0));
 		earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(planetScales[2]));
 		earthMVP = Projection * View * earthModelMatrix;
 
@@ -633,7 +656,7 @@ void setUpMVPS() {
 		moonModelMatrix = glm::mat4(1.0);
 		moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
 		moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(planetScales[3]));
-		moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
+		moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(0, 1, 0));
 		moonMVP = Projection * View * moonModelMatrix;
 
 		moonOrbitModelMatrix = glm::mat4(1.0);
@@ -644,7 +667,7 @@ void setUpMVPS() {
 
 		marsModelMatrix = glm::mat4(1.0);
 		marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
-		marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(1, 1, 0));
+		marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(0, 1, 0));
 		marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(planetScales[4]));
 		marsMVP = Projection * View * marsModelMatrix;
 
@@ -656,7 +679,7 @@ void setUpMVPS() {
 
 		mercuryModelMatrix = glm::mat4(1.0);
 		mercuryModelMatrix = glm::translate(mercuryModelMatrix, glm::vec3(planetLocations[0][0], planetLocations[0][1], planetLocations[0][2]));
-		mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(1, 1, 0));
+		mercuryModelMatrix = glm::rotate(mercuryModelMatrix, glm::radians(planetRotationValue[0]), glm::vec3(0, 1, 0));
 		mercuryModelMatrix = glm::scale(mercuryModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		mercuryMVP = Projection * View * mercuryModelMatrix;
 
@@ -666,7 +689,7 @@ void setUpMVPS() {
 
 		venusModelMatrix = glm::mat4(1.0);
 		venusModelMatrix = glm::translate(venusModelMatrix, glm::vec3(planetLocations[1][0], planetLocations[1][1], planetLocations[1][2]));
-		venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(1, 1, 0));
+		venusModelMatrix = glm::rotate(venusModelMatrix, glm::radians(planetRotationValue[1]), glm::vec3(0, 1, 0));
 		venusModelMatrix = glm::scale(venusModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		venusMVP = Projection * View * venusModelMatrix;
 
@@ -676,7 +699,7 @@ void setUpMVPS() {
 
 		earthModelMatrix = glm::mat4(1.0);
 		earthModelMatrix = glm::translate(earthModelMatrix, glm::vec3(planetLocations[2][0], planetLocations[2][1], planetLocations[2][2]));
-		earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(1, 1, 0));
+		earthModelMatrix = glm::rotate(earthModelMatrix, glm::radians(planetRotationValue[2]), glm::vec3(0, 1, 0));
 		earthModelMatrix = glm::scale(earthModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		earthMVP = Projection * View * earthModelMatrix;
 
@@ -687,7 +710,7 @@ void setUpMVPS() {
 		moonModelMatrix = glm::mat4(1.0);
 		moonModelMatrix = glm::translate(moonModelMatrix, glm::vec3(planetLocations[3][0], planetLocations[3][1], planetLocations[3][2]));
 		moonModelMatrix = glm::scale(moonModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
-		moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(1, 1, 0));
+		moonModelMatrix = glm::rotate(moonModelMatrix, glm::radians(planetRotationValue[3]), glm::vec3(0, 1, 0));
 		moonMVP = Projection * View * moonModelMatrix;
 
 		moonOrbitModelMatrix = glm::mat4(1.0);
@@ -698,7 +721,7 @@ void setUpMVPS() {
 
 		marsModelMatrix = glm::mat4(1.0);
 		marsModelMatrix = glm::translate(marsModelMatrix, glm::vec3(planetLocations[4][0], planetLocations[4][1], planetLocations[4][2]));
-		marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(1, 1, 0));
+		marsModelMatrix = glm::rotate(marsModelMatrix, glm::radians(planetRotationValue[4]), glm::vec3(0, 1, 0));
 		marsModelMatrix = glm::scale(marsModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		marsMVP = Projection * View * marsModelMatrix;
 
@@ -711,7 +734,7 @@ void setUpMVPS() {
 	if (gasosos) {
 		jupiterModelMatrix = glm::mat4(1.0);
 		jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
-		jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
+		jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(0, 1, 0));
 		jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(planetScales[5]));
 		jupiterMVP = Projection * View * jupiterModelMatrix;
 
@@ -721,9 +744,15 @@ void setUpMVPS() {
 
 		saturnModelMatrix = glm::mat4(1.0);
 		saturnModelMatrix = glm::translate(saturnModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
-		saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(1, 1, 0));
+		saturnModelMatrix = glm::rotate(saturnModelMatrix, glm::radians(planetRotationValue[6]), glm::vec3(0, 1, 0));
 		saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(planetScales[6]));
 		saturnMVP = Projection * View * saturnModelMatrix;
+
+		saturnRingsModelMatrix = glm::mat4(1.0);
+		saturnRingsModelMatrix = glm::translate(saturnRingsModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
+		//uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(0, 1, 0));
+		saturnRingsModelMatrix = glm::scale(saturnRingsModelMatrix, glm::vec3(planetScales[6]));
+		saturnRingsMVP = Projection * View * saturnRingsModelMatrix;
 
 		saturnOrbitModelMatrix = glm::mat4(1.0);
 		saturnOrbitModelMatrix = glm::scale(saturnOrbitModelMatrix, glm::vec3(planetDistance[6]));
@@ -731,13 +760,13 @@ void setUpMVPS() {
 
 		uranusModelMatrix = glm::mat4(1.0);
 		uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
-		uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(0, 1, 0));
 		uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(planetScales[7]));
 		uranusMVP = Projection * View * uranusModelMatrix;
 
 		uranusRingsModelMatrix = glm::mat4(1.0);
 		uranusRingsModelMatrix = glm::translate(uranusRingsModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
-		uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		//uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(0, 1, 0));
 		uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(planetScales[7]));
 		uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
 
@@ -747,7 +776,7 @@ void setUpMVPS() {
 
 		neptuneModelMatrix = glm::mat4(1.0);
 		neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
-		neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
+		neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(0, 1, 0));
 		neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(planetScales[8]));
 		neptuneMVP = Projection * View * neptuneModelMatrix;
 
@@ -759,7 +788,7 @@ void setUpMVPS() {
 
 		jupiterModelMatrix = glm::mat4(1.0);
 		jupiterModelMatrix = glm::translate(jupiterModelMatrix, glm::vec3(planetLocations[5][0], planetLocations[5][1], planetLocations[5][2]));
-		jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(1, 1, 0));
+		jupiterModelMatrix = glm::rotate(jupiterModelMatrix, glm::radians(planetRotationValue[5]), glm::vec3(0, 1, 0));
 		jupiterModelMatrix = glm::scale(jupiterModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		jupiterMVP = Projection * View * jupiterModelMatrix;
 
@@ -773,19 +802,25 @@ void setUpMVPS() {
 		saturnModelMatrix = glm::scale(saturnModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		saturnMVP = Projection * View * saturnModelMatrix;
 
+		saturnRingsModelMatrix = glm::mat4(1.0);
+		saturnRingsModelMatrix = glm::translate(saturnRingsModelMatrix, glm::vec3(planetLocations[6][0], planetLocations[6][1], planetLocations[6][2]));
+		//uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(0, 1, 0));
+		saturnRingsModelMatrix = glm::scale(saturnRingsModelMatrix, glm::vec3(planetScales[6]));
+		saturnRingsMVP = Projection * View * saturnRingsModelMatrix;
+
 		saturnOrbitModelMatrix = glm::mat4(1.0);
 		saturnOrbitModelMatrix = glm::scale(saturnOrbitModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		saturnOrbitMVP = Projection * View * saturnOrbitModelMatrix;
 
 		uranusModelMatrix = glm::mat4(1.0);
 		uranusModelMatrix = glm::translate(uranusModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
-		uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		uranusModelMatrix = glm::rotate(uranusModelMatrix, glm::radians(0.0f), glm::vec3(0, 1, 0));
 		uranusModelMatrix = glm::scale(uranusModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		uranusMVP = Projection * View * uranusModelMatrix;
 
 		uranusRingsModelMatrix = glm::mat4(1.0);
 		uranusRingsModelMatrix = glm::translate(uranusRingsModelMatrix, glm::vec3(planetLocations[7][0], planetLocations[7][1], planetLocations[7][2]));
-		uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(1, 1, 0));
+		//uranusRingsModelMatrix = glm::rotate(uranusRingsModelMatrix, glm::radians(planetRotationValue[7]), glm::vec3(0, 1, 0));
 		uranusRingsModelMatrix = glm::scale(uranusRingsModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		uranusRingsMVP = Projection * View * uranusRingsModelMatrix;
 
@@ -795,7 +830,7 @@ void setUpMVPS() {
 
 		neptuneModelMatrix = glm::mat4(1.0);
 		neptuneModelMatrix = glm::translate(neptuneModelMatrix, glm::vec3(planetLocations[8][0], planetLocations[8][1], planetLocations[8][2]));
-		neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(1, 1, 0));
+		neptuneModelMatrix = glm::rotate(neptuneModelMatrix, glm::radians(planetRotationValue[8]), glm::vec3(0, 1, 0));
 		neptuneModelMatrix = glm::scale(neptuneModelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
 		neptuneMVP = Projection * View * neptuneModelMatrix;
 
@@ -1373,6 +1408,48 @@ void drawSpheres() {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+
+	//SATURN RINGS --- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	// Send our transformation to the currently bound shader, 
+	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &saturnRingsMVP[0][0]);
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, saturnRingsTexture);
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(TextureID, 0);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnRingsVertexbuffer);
+	glVertexAttribPointer(
+		0,                  // attribute
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	// 2nd attribute buffer : UVs
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, saturnRingsUvbuffer);
+	glVertexAttribPointer(
+		1,                                // attribute
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, saturnVertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+
 	//SATURN ORBIT--- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// Send our transformation to the currently bound shader, 
 	// in the "MVP" uniform-----------------------------------------------------------------------------------------------
@@ -1931,4 +2008,4 @@ int main(void)
 	glfwTerminate();
 
 	return 0;
-}
+}  
