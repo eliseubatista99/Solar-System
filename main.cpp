@@ -30,36 +30,54 @@ glm::mat4 Projection;
 glm::mat4 View;
 // Get a handle for our "myTextureSampler" uniform
 GLuint TextureID;
+//Camera used (starts at (0,30,120))
 Camera camera(glm::vec3(0.0f, 30.0f, 120.0f));
+//Screen Resolution
 unsigned int screenWidth = 1280, screenHeight = 768;
+//Stored mouse  oordinates
 float lastX = screenWidth / 2.0f;
 float lastY = screenHeight / 2.0f;
+//Variable to check if the mouse first input (so it does not move around in the first frame)
 bool firstMouse = true;
+//Bool sotring the pause status
 bool paused = false;
-bool firstFrame = true;
-
+//Camera movement speed
 float camMoveSpeed = 100.0f;
 
+//Initialize the callbacks (funtions below)
 void framebuffer_size_callback(GLFWwindow* window, int screenWidth, int screenHeight);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+//Variables to normalize the movements speed to machines with different fps
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+//Scale of the sun sphere
 float sunScale = 20.0f;
+//Offset used from the last distance, to define the max distance the camera can move away from the sun
 float offsetFromNeptune = 140.0f;
+//Offset used when the lock-to-planet mode is active
 float offsetFromLookToPlanet = 2.0f;
+
+//View control bools
 bool rochosos = true;
 bool gasosos = true;
 bool toLook = false;
+
+//Input control bools
 bool canT = true, canRight = true, canLeft = true, canSpace = true, canL = true, canI = true;
+//lock-to-planet index starts at -1, so the first click on the right arrow bring the user to mercury
 int planetIndex = -1;
+//Integer with the current view mode
 int currentVision = 0; //0 - sun, 1 - top, 2 - Initial, 3 - on planet, 4 - free
+
+//3d vectors storing some views
 glm::vec3 lookDestination(0.0f, 0.0f, 0.0f);
 glm::vec3 topVision(0.0f, 0.0f, 0.0f);
 glm::vec3 initVision(0.0f, 30.0f, 120.0f);
 
-//---SUN------------------------------------------
+//---Vertice vectors------------------------------------------
 std::vector<glm::vec3> sunVertices;
 std::vector<glm::vec3> mercuryVertices;
 std::vector<glm::vec3> mercuryOrbitVertices;
@@ -82,6 +100,7 @@ std::vector<glm::vec3> uranusRingsVertices;
 std::vector<glm::vec3> neptuneVertices;
 std::vector<glm::vec3> neptuneOrbitVertices;
 
+//UV vectors
 std::vector<glm::vec2> sunUvs;
 std::vector<glm::vec2> mercuryUvs;
 std::vector<glm::vec2> mercuryOrbitUvs;
@@ -104,6 +123,7 @@ std::vector<glm::vec2> uranusOrbitUvs;
 std::vector<glm::vec2> neptuneUvs;
 std::vector<glm::vec2> neptuneOrbitUvs;
 
+//Normals vectors (not used :c)
 std::vector<glm::vec3> sunNormals; // Won't be used at the moment.
 std::vector<glm::vec3> mercuryNormals; // Won't be used at the moment.
 std::vector<glm::vec3> mercuryOrbitNormals; // Won't be used at the moment.
@@ -127,7 +147,7 @@ std::vector<glm::vec3> neptuneNormals; // Won't be used at the moment.
 std::vector<glm::vec3> neptuneOrbitNormals; // Won't be used at the moment.
 
 
-// Load the texture
+//Textures buffers
 GLuint sunTexture;
 GLuint mercuryTexture;
 GLuint mercuryOrbitTexture;
@@ -150,6 +170,7 @@ GLuint uranusOrbitTexture;
 GLuint neptuneTexture;
 GLuint neptuneOrbitTexture;
 
+//Vertex Buffers
 GLuint sunVertexbuffer;
 GLuint mercuryVertexbuffer;
 GLuint mercuryOrbitVertexbuffer;
@@ -172,6 +193,7 @@ GLuint uranusOrbitVertexbuffer;
 GLuint neptuneVertexbuffer;
 GLuint neptuneOrbitVertexbuffer;
 
+//Uv buffers
 GLuint sunUvbuffer;
 GLuint mercuryUvbuffer;
 GLuint mercuryOrbitUvbuffer;
@@ -194,7 +216,7 @@ GLuint uranusOrbitUvbuffer;
 GLuint neptuneUvbuffer;
 GLuint neptuneOrbitUvbuffer;
 
-
+//4x4 matrices for the planet models
 glm::mat4 sunModelMatrix;
 glm::mat4 mercuryModelMatrix;
 glm::mat4 mercuryOrbitModelMatrix;
@@ -217,7 +239,7 @@ glm::mat4 uranusOrbitModelMatrix;
 glm::mat4 neptuneModelMatrix;
 glm::mat4 neptuneOrbitModelMatrix;
 
-
+//Planets mvp
 glm::mat4 sunMVP;
 glm::mat4 mercuryMVP;
 glm::mat4 mercuryOrbitMVP;
@@ -240,7 +262,7 @@ glm::mat4 uranusOrbitMVP;
 glm::mat4 neptuneMVP;
 glm::mat4 neptuneOrbitMVP;
 
-//----------------------------------------
+//---------------------------------------- //Stores the positions of the planets
 float planetLocations[9][3] = {
 	{26.0f,0.0f,0.0f}, //MERCURY
 	{30.0f,0.0f,0.0f}, //VENUS
@@ -254,7 +276,7 @@ float planetLocations[9][3] = {
 };
 
 //----------------------------------------
-float lookToPlanetLocations[9][3] = {
+float lookToPlanetLocations[9][3] = { //Stores the positions of the camera on lock-on-planet mode
 	{26.0f,0.0f,0.0f}, //MERCURY
 	{30.0f,0.0f,0.0f}, //VENUS
 	{34.0f,0.0f,0.0f}, //EARTH
@@ -266,23 +288,22 @@ float lookToPlanetLocations[9][3] = {
 	{75.0f,0.0f,0.0f}, //NEPTUNE
 };
 
-float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0f, 75.0f };
+float planetDistance[9] = { 26.0f, 30.0f, 34.0f, 2.0f, 38.0f, 45.0f, 55.0f, 65.0f, 75.0f }; //planet distances to the sun
 
-float planetTranslationSpeed[9] = { 0.85f, -0.63f,  -0.53f, 1.89f , -0.43f,  -0.23f,  -0.17f,  -0.12f,  -0.9f };
+float planetTranslationSpeed[9] = { 0.85f, -0.63f,  -0.53f, 1.89f , -0.43f,  -0.23f,  -0.17f,  -0.12f,  -0.9f }; //Planet movement speed around the sun
 
-float planetRotationSpeed[9] = { 58.646f, -243.018f, 0.998f, 0.0081f, 1.026f, 0.41354f, 0.444f, -0.718f, 0.671f };
+float planetRotationSpeed[9] = { 58.646f, -243.018f, 0.998f, 0.0081f, 1.026f, 0.41354f, 0.444f, -0.718f, 0.671f }; //Planet rotation speed
 
-float planetRotationValue[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+float planetRotationValue[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f }; //Planet used to the rotation movement
 
-float planetAngles[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+float planetAngles[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f }; //Planet angles (used to move)
 
-float planetScales[9] = { 1.0f, 1.2f, 1.6f, 0.2f, 0.8f, 5.0f, 4.25f, 3.0f, 2.9f };
+float planetScales[9] = { 1.0f, 1.2f, 1.6f, 0.2f, 0.8f, 5.0f, 4.25f, 3.0f, 2.9f }; //Planet scales
 
-float planetOffsets[9] = { 2.0f, 2.2f, 2.6f, 1.2f, 1.8f, 6.5f, 6.25f, 4.5f, 4.0f };
+float planetOffsets[9] = { 2.0f, 2.2f, 2.6f, 1.2f, 1.8f, 6.5f, 6.25f, 4.5f, 4.0f }; //Offets of the camera from the planets
 
+//Function to load every texture, if one can't be loaded, exit the program
 void loadTextures() {
-	// Load the texture
-	//sunTexture = loadDDS("resources/textures/sun_texture_8k.dds");
 	sunTexture = loadDDS("resources/textures/sun_texture_8k.dds");
 	if (sunTexture == -1) exit(EXIT_FAILURE);
 	mercuryTexture = loadDDS("resources/textures/mercury_texture.dds");
@@ -318,6 +339,7 @@ void loadTextures() {
 	neptuneOrbitTexture = uranusRingsTexture;
 }
 
+//Function to load the models, if one can't be read, exit program
 void loadObjects() {
 	if (!loadOBJ("resources/models/no_rings_planet.obj", sunVertices, sunUvs, sunNormals)) {
 		exit(EXIT_FAILURE);
@@ -402,6 +424,7 @@ void loadObjects() {
 
 }
 
+//Load data to VBO
 void loadAllVBOs() {
 	// Load it into a VBO
 	glGenBuffers(1, &sunVertexbuffer);
@@ -575,7 +598,12 @@ void loadAllVBOs() {
 
 }
 
+//Calculate the camera position of the lock-on-camera based on the planets locations
 void calculateNewLookLocations(int i) {
+
+	if (paused)
+		return;
+
 	for (int i = 0; i < 9; i++) {
 		if (i == 3) {
 			lookToPlanetLocations[i][0] = planetLocations[2][0] + ((planetDistance[i] + (offsetFromLookToPlanet * planetOffsets[i])) * sin(planetAngles[i]));
@@ -590,17 +618,20 @@ void calculateNewLookLocations(int i) {
 	}
 }
 
+//Calculate the planets locations every frame
 void calcNewLocations() {
 
 	if (paused)
 		return;
-
+	//Loop through all the planets
 	for (int i = 0; i < 9; i++) {
 		planetAngles[i] += (planetTranslationSpeed[i] * deltaTime);
 		planetRotationValue[i] += (planetRotationSpeed[i] * deltaTime);
+		//Reset the rotation values if it reaches 360
 		if (planetRotationValue[i] >= 360.0f) {
 			planetRotationValue[i] = -360.0f;
 		}
+		//If its the moon
 		if (i == 3) {
 			planetLocations[i][0] = planetLocations[2][0] + (planetDistance[i] * sin(planetAngles[i]));
 			planetLocations[i][2] = planetLocations[2][2] + (planetDistance[i] * cos(planetAngles[i]));
@@ -615,7 +646,7 @@ void calcNewLocations() {
 }
 
 
-
+//Set the mvp to every planet, showing only some of them in some cases
 void setUpMVPS() {
 
 	sunModelMatrix = glm::mat4(1.0);
@@ -841,6 +872,7 @@ void setUpMVPS() {
 	}
 }
 
+//Draw functions
 void drawSpheres() {
 	// Use our shader
 	glUseProgram(programID);
@@ -1706,6 +1738,7 @@ void updateLook() {
 
 }
 
+//Function to focus on thee sun
 void lookToSun(int view) {
 	if (view == currentVision || view == 4) {
 		planetIndex = -1;
@@ -1722,6 +1755,7 @@ void lookToSun(int view) {
 	
 }
 
+//Function to focus on planets
 void lookToPlanet(bool direction) { //false - dec /true - inc	
 	if (!direction) {
 		planetIndex--;
@@ -1780,6 +1814,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(yoffset);
 }
 
+//Keyboard keys callbacks
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -1832,7 +1867,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 	}
 
-
+	//Toggles between free view and look to sun view
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
 		if (canL) {
 			canL = false;
@@ -1844,6 +1879,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			}
 		}
 	}
+
+	//Toggles between top vision and free view
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
 		if (canT) {
 			canT = false;
@@ -1857,6 +1894,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 	}
 
+	//Toggles between initial view and free view
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
 		if (canI) {
 			canI = false;
@@ -1870,6 +1908,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 	}
 
+	//Increase lock-on-camera index
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		if (canRight) {
 			canRight = false;
@@ -1879,6 +1918,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			canRight = true;
 		}
 	}
+
+	//Decrease lock-on-camera index
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		if (canLeft) {
 			canLeft = false;
@@ -1962,11 +2003,16 @@ int main(void)
 	// Get a handle for our "myTextureSampler" uniform
 	TextureID = glGetUniformLocation(programID, "myTextureSampler");
 
+	//load models
 	loadObjects();
-
+	//load data to VBO
 	loadAllVBOs();
+
+	//Setup top vision array
 	topVision = glm::vec3(0.0f, planetDistance[8] + offsetFromNeptune, 0.0f);
+	//Set the movement speed
 	camera.setMovementSpeed(camMoveSpeed);
+
 	do {
 
 		// per-frame time logic
@@ -1975,17 +2021,16 @@ int main(void)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		camera.setDeltaTime(deltaTime);
+		//Calculate planet locations
 		calcNewLocations();
-
-		// input
-		// -----
-		//processInput(window);
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if (toLook) {
+			//Update lock-on-planet 
 			updateLook();
 		}
+		//Draw 
 		drawSpheres();
 
 
