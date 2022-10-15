@@ -1,5 +1,5 @@
 # Solar-System
-OpenlGl Solar System
+OpenGl Solar System
 
 ## Installation
 The tool used to wrote this code was Visual Studio.
